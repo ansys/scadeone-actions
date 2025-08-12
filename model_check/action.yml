@@ -74,11 +74,11 @@ runs:
     - name: "Install Git and clone project"
       uses: actions/checkout@v2
 
-    - name: "Set up Python"
-      uses: ansys/actions/_setup-python@v10.0.14
-      with:
-        python-version: ${{ inputs.python-version }}
-        use-cache: ${{ inputs.use-python-cache }}
+    # - name: "Set up Python"
+    #   uses: ansys/actions/_setup-python@v10.0.14
+    #   with:
+    #     python-version: ${{ inputs.python-version }}
+    #     use-cache: ${{ inputs.use-python-cache }}
 
     - name: "Install dependencies"
       shell: bash
