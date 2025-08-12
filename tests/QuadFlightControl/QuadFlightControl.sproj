@@ -1,0 +1,17 @@
+{
+  "Version": "1.0",
+  "Name": "QuadFlightControl",
+  "Dependencies": [
+    "$(SCADE_ONE_LIBRARIES_DIR)\\Flows\\Flows.sproj",
+    "$(SCADE_ONE_LIBRARIES_DIR)\\Math\\Math.sproj",
+    "$(SCADE_ONE_LIBRARIES_DIR)\\Sources\\Sources.sproj",
+    "$(SCADE_ONE_LIBRARIES_DIR)\\Check\\Check.sproj"
+  ],
+  "Resources": [
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\SimVerticalAccelOracle.sd",
+      "Key": "SimVerticalAccelOracle"
+    }
+  ]
+}

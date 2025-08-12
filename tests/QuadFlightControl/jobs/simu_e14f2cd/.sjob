@@ -1,0 +1,18 @@
+{
+  "Version": "2.1",
+  "Kind": "Simulation",
+  "Properties": {
+    "RootDeclarations": [
+      ""
+    ],
+    "Name": "SimVerticalAccel",
+    "CustomArguments": "",
+    "FileScenario": "",
+    "SimulationInputType": "Harness",
+    "TestHarness": "QuadTest::TestVerticalAccel",
+    "UseCycleTime": "False"
+  },
+  "InputPaths": [
+    "assets/QuadTest.swant"
+  ]
+}

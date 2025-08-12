@@ -1,0 +1,14 @@
+{
+  "Version": "2.1",
+  "Kind": "ModelCheck",
+  "Properties": {
+    "RootDeclarations": [
+      "QuadFlightControl::QuadFlightControl"
+    ],
+    "Name": "ModelCheckQuadFlightC",
+    "CustomArguments": ""
+  },
+  "InputPaths": [
+    "assets/QuadFlightControl.swan"
+  ]
+}

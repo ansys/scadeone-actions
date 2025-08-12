@@ -1,0 +1,6 @@
+out/
+config.json
+cg_log.json
+sim_log.json
+output/
+*.pyc

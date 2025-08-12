@@ -1,0 +1,16 @@
+{
+  "Version": "2.1",
+  "Kind": "TestExecution",
+  "Properties": {
+    "RootDeclarations": [
+      ""
+    ],
+    "Name": "QuadTest",
+    "CustomArguments": "{\"float32_relative_tolerance\": 1E-4}",
+    "TestHarness": "",
+    "TestResultFile": "QuadTest.json"
+  },
+  "InputPaths": [
+    "assets/QuadTest.swant"
+  ]
+}

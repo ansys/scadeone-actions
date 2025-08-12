@@ -1,0 +1,20 @@
+
+name: main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  model_check:
+    runs-on: [self-hosted, 'SCADE']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run model check action
+        uses: ./model_check
+        with:
+          scade-dir: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
+          project: 'tests/QuadFlightControl/QuadFlightControl.sproj'
+          job-name: 'ModelCheckQuadFlightC'

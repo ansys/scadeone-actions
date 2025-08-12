@@ -1,0 +1,16 @@
+{
+  "Version": "2.1",
+  "Kind": "TestExecution",
+  "Properties": {
+    "RootDeclarations": [
+      ""
+    ],
+    "Name": "TestExeRightRoll",
+    "CustomArguments": "",
+    "TestHarness": "QuadTest::TestRightRoll",
+    "TestResultFile": "TestRightRoll.json"
+  },
+  "InputPaths": [
+    "assets/QuadTest.swant"
+  ]
+}

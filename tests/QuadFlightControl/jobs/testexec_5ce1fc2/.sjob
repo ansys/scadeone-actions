@@ -1,0 +1,16 @@
+{
+  "Version": "2.1",
+  "Kind": "TestExecution",
+  "Properties": {
+    "RootDeclarations": [
+      ""
+    ],
+    "Name": "TestExeVerticalAccel",
+    "CustomArguments": "{\"float32_relative_tolerance\": 1E-4}",
+    "TestHarness": "QuadTest::TestVerticalAccel",
+    "TestResultFile": "TestExeVerticalAccel.json"
+  },
+  "InputPaths": [
+    "assets/QuadTest.swant"
+  ]
+}

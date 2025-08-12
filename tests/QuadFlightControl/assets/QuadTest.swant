@@ -1,0 +1,139 @@
+-- version swan: 2025.1 graph: 2.0 swant: 1.1
+use Harness::Sources::N as Sources;
+
+use QuadFlightControl as Q;
+
+use QuadTypes as T;
+
+use Harness::Check;
+
+use Float;
+
+_harness TestVerticalAccel
+{
+  diagram
+    (#0 block (Sources::Ramp \ amplitude: 0.1, cycles: 20_ui32, offset: 0.0)
+              #pragma diagram {"xy":"H102636;V-41650","wh":"20000;14000"} #end)
+    (#1 #pragma swt under_test #end block (Q::QuadFlightControl \ isReset: false, motorStates: (
+                                              frontLeftFaulty: false,
+                                              frontRightFaulty: false,
+                                              rearLeftFaulty: false,
+                                              rearRightFaulty: false
+                                            ), desiredAttitude: ZERO_ATTITUDE, currentAttitude: ZERO_ATTITUDE)
+                                          #pragma diagram {"xy":"H147454;V-41650","wh":"28387;21906"} #end)
+    (#3 expr _current_cycle = 20
+    #pragma diagram {"xy":"H122975;V-61825","wh":"22752;3200"} #end)
+    (#4 def _stop_condition
+    #pragma diagram {"xy":"H163288;V-61825","wh":"18064;3200"} #end)
+    (#6 expr #8.(frontRightRotor)
+      where
+        (#8 group)
+    #pragma diagram {"xy":"H187498;V-41650","wh":"26000;7000"} #end)
+    (#7 block (_oracle SimVerticalAccelOracle)
+    #pragma diagram {"xy":"H221148;V-41650","wh":"12000;14000"} #end)
+    
+    (#2 wire #0 => #1 .(desiredVerticalAccel)
+    #pragma diagram {"wp":"v0|#0 #1"} #end)
+    (#5 wire #3 => #4)
+    (#9 wire #6 => #7 .(frontRightRotor))
+    (#10 wire #1 .(rotorCmd) => #8
+    #pragma diagram {"wp":"v0|#1 #8"} #end)
+}
+
+_harness TestRightRoll
+{
+  diagram
+    (#0 #pragma swt under_test #end block (Q::QuadFlightControl \ isReset: false, motorStates: (
+                                              frontLeftFaulty: false,
+                                              frontRightFaulty: false,
+                                              rearLeftFaulty: false,
+                                              rearRightFaulty: false
+                                            ), desiredVerticalAccel: 0.0)
+                                          #pragma diagram {"xy":"H2969;V391","wh":"28387;25230"} #end)
+    (#1 block (Check::AlwaysAfterN \ n: 12_ui32)
+              #pragma diagram {"xy":"H80560;V12478","wh":"16000;8819"} #end)
+    (#2 expr 0.0
+    #pragma diagram {"xy":"H-52072;V-13127"} #end)
+    (#3 expr 0.0
+    #pragma diagram {"xy":"H-52072;V-9627"} #end)
+    (#4 expr {#5}: T::AttitudeType
+      where
+        (#5 group)
+    #pragma diagram {"xy":"H-34395;V-8477","wh":"16000;12500"} #end)
+    (#6 expr _current_cycle = 20
+    #pragma diagram {"xy":"H-45072;V-23174","wh":"22000;3200"} #end)
+    (#7 def _stop_condition
+    #pragma diagram {"xy":"H-19331;V-23174","wh":"18064;3200"} #end)
+    (#13 block (Float::RelEQ \ e: 1.0e-3)
+               #pragma diagram {"xy":"H54132;V12478","wh":"12000;10638"} #end)
+    (#10 expr 0.0
+    #pragma diagram {"xy":"H-52073;V9960"} #end)
+    (#15 expr 0.0
+    #pragma diagram {"xy":"H-52073;V6460"} #end)
+    (#16 expr {#17}: T::AttitudeType
+      where
+        (#17 group)
+    #pragma diagram {"xy":"H-34395;V10867","wh":"16000;12500"} #end)
+    (#14 block (Sources::Step \ cycles: 3_ui32, amplitude: 0.01, offset: 0.0)
+               #pragma diagram {"xy":"H-54895;V-759","wh":"13645;10638"} #end)
+    (#18 block (Sources::Step \ cycles: 10_ui32, amplitude: 0.01, offset: 0.0)
+               #pragma diagram {"xy":"H-52073;V18876","wh":"13645;10638"} #end)
+    (#19 group
+    #pragma diagram {"xy":"H35304;V12478","wh":"800;14000"} #end)
+    (assert $TestStable: #30 ; 
+      where
+        (#30 group)
+    #pragma diagram {"xy":"H99774;V12478"} #end)
+    (#32 block Check::Implies
+               #pragma diagram {"xy":"H80560;V-5224","wh":"16000;7225"} #end)
+    (#33 group
+    #pragma diagram {"xy":"H35304;V-5224","wh":"800;14000"} #end)
+    (#34 expr _current_cycle > 3 and _current_cycle < 10
+    #pragma diagram {"xy":"H43882;V-17749","wh":"44000;3200"} #end)
+    (assert $TestTransient: #39 ; 
+      where
+        (#39 group)
+    #pragma diagram {"xy":"H99774;V-5224"} #end)
+    (#35 expr #36 > #37
+      where
+        (#36 group)
+        (#37 group)
+    #pragma diagram {"xy":"H54132;V-4495"} #end)
+    
+    (#8 wire #2 => #5 .(yaw))
+    (#9 wire #3 => #5 .(pitch))
+    (#24 wire #14 => #5 .(roll)
+    #pragma diagram {"wp":"v-3394|#14 #5"} #end)
+    (#11 wire #6 => #7)
+    (#12 wire #4 => #0 .(desiredAttitude))
+    (#25 wire #0 .(rotorCmd) => #19, #33
+    #pragma diagram {"wp":"v3236|#0 h3720[v6615 #19, h8016 v-8851 #33]"} #end)
+    (#20 wire #15 => #17 .(yaw))
+    (#21 wire #10 => #17 .(pitch))
+    (#22 wire #18 => #17 .(roll)
+    #pragma diagram {"wp":"v-3539|#18 #17"} #end)
+    (#23 wire #16 => #0 .(currentAttitude))
+    (#26 wire #19 .(frontLeftRotor) => #13 .(a)
+    #pragma diagram {"wp":"v2160|#19 #13"} #end)
+    (#27 wire #19 .(frontRightRotor) => #13 .(b)
+    #pragma diagram {"wp":"v-2160|#19 #13"} #end)
+    (#28 wire #13 => #1 .(p)
+    #pragma diagram {"wp":"v0|#13 #1"} #end)
+    (#31 wire #1 .(prop) => #30
+    #pragma diagram {"wp":"v0|#1 #30"} #end)
+    (#41 wire #34 => #32 .(p)
+    #pragma diagram {"wp":"#34 h4839 v10783 #32"} #end)
+    (#44 wire #32 .(prop) => #39
+    #pragma diagram {"wp":"v0|#32 #39"} #end)
+    (#40 wire #35 => #32 .(q))
+    (#42 wire #33 .(frontLeftRotor) => #36
+    #pragma diagram {"wp":"v-1171|#33 #36"} #end)
+    (#43 wire #33 .(frontRightRotor) => #37
+    #pragma diagram {"wp":"v2629|#33 #37"} #end)
+}
+
+const ZERO_ATTITUDE = {
+  pitch: 0.0, 
+  roll: 0.0, 
+  yaw: 0.0
+}: T::AttitudeType;

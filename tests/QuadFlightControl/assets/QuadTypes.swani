@@ -1,0 +1,33 @@
+-- version swan: 2025.1 graph: 2.0
+type AttitudeType = {
+  pitch : float32,
+  roll : float32,
+  yaw : float32
+};
+
+type MotorHealth = enum {
+  NOMINAL,
+  ABNORMAL,
+  FAILURE
+};
+
+group MotorsHealth = (
+  frontLeft : MotorHealth,
+  frontRight : MotorHealth,
+  rearLeft : MotorHealth,
+  rearRight : MotorHealth
+);
+
+group MotorsFault = (
+  frontLeftFaulty : bool,
+  frontRightFaulty : bool,
+  rearLeftFaulty : bool,
+  rearRightFaulty : bool
+);
+
+group RotorCommands = (
+  frontLeftRotor: float32,
+  frontRightRotor: float32,
+  rearLeftRotor: float32,
+  rearRightRotor: float32
+);

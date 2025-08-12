@@ -1,0 +1,230 @@
+-- version swan: 2025.1 graph: 2.0
+use Math::Trigo::StdC as Trigo;
+
+inline function LimiterUnSymmetrical (lusInput: 'T;
+                                      lowLimit: 'T;
+                                      highLimit: 'T;)
+  returns (lusOutput: 'T;)
+  where 'T numeric
+{
+  diagram
+    (assume $A1: lowLimit <= highLimit;
+    #pragma diagram {"xy":"H66304;V19370","wh":"36000;3200"} #end)
+    (#1 def lusOutput
+    #pragma diagram {"xy":"H142927;V55695","wh":"14000;3200"} #end)
+    (#2 expr highLimit
+    #pragma diagram {"xy":"H54086;V32170","wh":"14000;3200"} #end)
+    (#3 expr lowLimit
+    #pragma diagram {"xy":"H53554;V44970","wh":"12000;3200"} #end)
+    (#4 expr if #5 then #6 else #7
+      where
+        (#5 group)
+        (#6 group)
+        (#7 group)
+    #pragma diagram {"xy":"H95300;V57595"} #end)
+    (#8 expr if #9 then #10 else #11
+      where
+        (#9 group)
+        (#10 group)
+        (#11 group)
+    #pragma diagram {"xy":"H124120;V55695"} #end)
+    (#12 expr lusInput
+    #pragma diagram {"xy":"H53086;V28370","wh":"12000;3200"} #end)
+    (#13 expr #14 <= #15
+      where
+        (#14 group)
+        (#15 group)
+    #pragma diagram {"xy":"H81742;V43070"} #end)
+    (#16 expr #17 >= #18
+      where
+        (#17 group)
+        (#18 group)
+    #pragma diagram {"xy":"H112640;V30270"} #end)
+    
+    (#19 wire #12 => #17, #14, #7
+    #pragma diagram {"wp":"#12 h13472[#17, v12800[#14, v18325 #7]]"} #end)
+    (#20 wire #3 => #6, #15
+    #pragma diagram {"wp":"#3 h6668[v10725 #6, #15]"} #end)
+    (#21 wire #8 => #1)
+    (#22 wire #2 => #18, #10
+    #pragma diagram {"wp":"#2 h44384[#18, v21625 #10]"} #end)
+    (#23 wire #13 => #5
+    #pragma diagram {"wp":"#13 h10058 #5"} #end)
+    (#24 wire #16 => #9
+    #pragma diagram {"wp":"#16 h7980 #9"} #end)
+    (#25 wire #4 => #11)
+}
+
+inline function LimiterSymmetrical (lsInput: 'T;
+                                    bandOrigin: 'T;
+                                    tolerance: 'T;)
+  returns (lsOutput: 'T;)
+  where 'T numeric
+{
+  diagram
+    (#0 expr tolerance
+    #pragma diagram {"dir":"se","xy":"H34417;V57330","wh":"14000;3200"} #end)
+    (#2 def lsOutput
+    #pragma diagram {"xy":"H145421;V33520","wh":"12000;3200"} #end)
+    (#3 expr lsInput
+    #pragma diagram {"xy":"H60610;V21035","wh":"12000;3200"} #end)
+    (#4 expr if #5 then #6 else #7
+      where
+        (#5 group)
+        (#6 group)
+        (#7 group)
+    #pragma diagram {"xy":"H105880;V57330"} #end)
+    (#8 expr if #9 then #10 else #11
+      where
+        (#9 group)
+        (#10 group)
+        (#11 group)
+    #pragma diagram {"xy":"H124435;V33520"} #end)
+    (#13 expr #14 + #15
+      where
+        (#14 group)
+        (#15 group)
+    #pragma diagram {"xy":"H60360;V31620"} #end)
+    (#17 expr #18 - #19
+      where
+        (#18 group)
+        (#19 group)
+    #pragma diagram {"xy":"H60360;V55430"} #end)
+    (#20 expr #21 <= #22
+      where
+        (#21 group)
+        (#22 group)
+    #pragma diagram {"xy":"H86334;V45425"} #end)
+    (#23 expr #24 >= #25
+      where
+        (#24 group)
+        (#25 group)
+    #pragma diagram {"xy":"H86334;V22935"} #end)
+    (#1 expr bandOrigin
+    #pragma diagram {"xy":"H33479;V33520","wh":"14000;3200"} #end)
+    
+    (#26 wire #0 => #14, #19
+    #pragma diagram {"wp":"#0 h10471[v-27610 #14, #19]"} #end)
+    (#27 wire #17 => #22, #6
+    #pragma diagram {"wp":"#17 h9487[v-8105 #22, #6]"} #end)
+    (#28 wire #13 => #25, #10
+    #pragma diagram {"wp":"#13 h9487[v-6785 #25, #10]"} #end)
+    (#29 wire #23 => #9
+    #pragma diagram {"wp":"#23 h34601 #9"} #end)
+    (#30 wire #8 => #2)
+    (#31 wire #20 => #5
+    #pragma diagram {"wp":"#20 h16046 #5"} #end)
+    (#33 wire #4 => #11
+    #pragma diagram {"wp":"#4 h5778 v-21910 #11"} #end)
+    (#34 wire #3 => #24, #21, #7
+    #pragma diagram {"wp":"#3 h12228[#24, v22490[#21, v15705 #7]]"} #end)
+    (#12 wire #1 => #15, #18
+    #pragma diagram {"wp":"#1 h5464[#15, v20010 #18]"} #end)
+}
+
+function RotateXY (x: float32;
+                   y: float32;
+                   a: float32;)
+  returns (xo: float32;
+           yo: float32;)
+{
+  diagram
+    (#1484 expr x
+    #pragma diagram {"xy":"H99455;V62120"} #end)
+    (#1485 expr y
+    #pragma diagram {"xy":"H99455;V52860"} #end)
+    (#1486 def yo
+    #pragma diagram {"xy":"H160725;V58320"} #end)
+    (#1487 def xo
+    #pragma diagram {"xy":"H160725;V26935"} #end)
+    (#1488 expr y
+    #pragma diagram {"xy":"H99455;V32390"} #end)
+    (#1489 expr #1023 * #1022
+      where
+        (#1023 group)
+        (#1022 group)
+    #pragma diagram {"xy":"H113095;V60220"} #end)
+    (#1490 block Trigo::Cosine
+                 #pragma diagram {"xy":"H70538;V29490","wh":"17575;9000"} #end)
+    (#1491 expr #1025 - #1024
+      where
+        (#1025 group)
+        (#1024 group)
+    #pragma diagram {"xy":"H140572;V26935"} #end)
+    (#1492 expr #1027 * #1026
+      where
+        (#1027 group)
+        (#1026 group)
+    #pragma diagram {"xy":"H113095;V50960"} #end)
+    (#1493 expr x
+    #pragma diagram {"xy":"H99455;V23130"} #end)
+    (#1494 expr a
+    #pragma diagram {"xy":"H39291;V26935"} #end)
+    (#1495 block Trigo::Sine
+                 #pragma diagram {"xy":"H70538;V58320","wh":"17575;8637"} #end)
+    (#1496 expr #1029 + #1028
+      where
+        (#1029 group)
+        (#1028 group)
+    #pragma diagram {"xy":"H140572;V58320"} #end)
+    (#1497 expr #1031 * #1030
+      where
+        (#1031 group)
+        (#1030 group)
+    #pragma diagram {"xy":"H113095;V34290"} #end)
+    (#1498 expr #1033 * #1032
+      where
+        (#1033 group)
+        (#1032 group)
+    #pragma diagram {"xy":"H113095;V25030"} #end)
+    
+    (#1499 wire #1497 => #1024
+    #pragma diagram {"wp":"#1497 h10239 v-5455 #1024"} #end)
+    (#1500 wire #1490 => #1027, #1032
+    #pragma diagram {"wp":"v-2560|#1490 h9064[v22130 #1027, #1032]"} #end)
+    (#1501 wire #1484 => #1022)
+    (#1502 wire #1488 => #1031)
+    (#1503 wire #1485 => #1026)
+    (#1504 wire #1494 => #1495, #1490
+    #pragma diagram {"wp":"#1494 h10730[v31385 #1495, #1490]"} #end)
+    (#1505 wire #1492 => #1029
+    #pragma diagram {"wp":"#1492 h10239 v5460 #1029"} #end)
+    (#1506 wire #1496 => #1486)
+    (#1507 wire #1495 => #1030, #1023
+    #pragma diagram {"wp":"v0|#1495 h4688[v-22130 #1030, #1023]"} #end)
+    (#1508 wire #1498 => #1025)
+    (#1509 wire #1493 => #1033)
+    (#1510 wire #1491 => #1487)
+    (#1511 wire #1489 => #1028)
+}
+
+node Integrator (i: 'T;
+                 x : 'T;)
+  returns (y: 'T;)
+  where 'T numeric
+{
+  diagram
+    (#0 def y
+    #pragma diagram {"xy":"H8950;V-11950"} #end)
+    (#1 expr i
+    #pragma diagram {"xy":"H-38350;V-6250"} #end)
+    (#2 expr x
+    #pragma diagram {"xy":"H-38350;V-13850"} #end)
+    (#3 expr #4 pre #5
+      where
+        (#4 group)
+        (#5 group)
+    #pragma diagram {"xy":"H-21850;V-4350"} #end)
+    (#6 expr #7 + #8
+      where
+        (#7 group)
+        (#8 group)
+    #pragma diagram {"xy":"H-6750;V-11950"} #end)
+    
+    (#9 wire #1 => #4)
+    (#10 wire #6 => #5, #0
+    #pragma diagram {"wp":"#6 h3500[v12100 h-30100 v-2600 #5, #0]"} #end)
+    (#11 wire #3 => #8
+    #pragma diagram {"wp":"#3 h3550 v-5700 #8"} #end)
+    (#12 wire #2 => #7)
+}

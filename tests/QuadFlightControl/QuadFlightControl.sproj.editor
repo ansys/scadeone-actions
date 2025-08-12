@@ -1,0 +1,18 @@
+{
+  "JobsOrder": [
+    "jobs\\codegen_e80bece\\.sjob",
+    "jobs\\simu_7433200\\.sjob",
+    "jobs\\simu_e14f2cd\\.sjob",
+    "jobs\\testexec_5e6f86d\\.sjob",
+    "jobs\\testexec_33edb95\\.sjob",
+    "jobs\\testexec_5ce1fc2\\.sjob",
+    "jobs\\check_6103c96\\.sjob"
+  ],
+  "ModulesOrder": [
+    "assets\\QuadFlightControl.swan",
+    "assets\\QuadSimuRP.swant",
+    "assets\\QuadTest.swant",
+    "assets\\QuadTypes.swani",
+    "assets\\QuadUtils.swan"
+  ]
+}

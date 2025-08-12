@@ -1,0 +1,19 @@
+{
+  "Version": "2.1",
+  "Kind": "Simulation",
+  "Properties": {
+    "RootDeclarations": [
+      ""
+    ],
+    "Name": "SimRightRoll",
+    "CustomArguments": "",
+    "FileScenario": "",
+    "SimulationInputType": "Harness",
+    "TestHarness": "QuadTest::TestRightRoll",
+    "UseCycleTime": "True",
+    "CycleTime": "200"
+  },
+  "InputPaths": [
+    "assets/QuadTest.swant"
+  ]
+}
