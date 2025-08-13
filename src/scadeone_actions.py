@@ -135,7 +135,7 @@ class ScadeOneActions:
         message = result.message
 
         if result.code == 0 and args.output:
-            # Save check report i na folder specified by args.output
+            # Save check report in a folder specified by args.output
             Path(args.output).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(job.storage.path.parent / 'out' / 'log.txt', args.output)
             message += '\n' + f'Model check report saved to {args.output}'

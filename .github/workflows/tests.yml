@@ -1,5 +1,12 @@
 
 name: main
+
+env:
+  SCADE_DIR: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
+  PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
+  JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
+  JOB_CODE_GEN: "CodeGen"
+
 on:
   push:
     branches:
@@ -7,6 +14,10 @@ on:
 
 jobs:
   model_check:
+    strategy:
+    matrix:
+      # Define the list of jobs to run for model tests execution
+      job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     runs-on: [self-hosted, 'SCADE']
     steps:
       - name: Checkout repository
@@ -15,6 +26,20 @@ jobs:
       - name: Run model check action
         uses: ./model_check
         with:
-          scade-dir: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
-          project: 'tests/QuadFlightControl/QuadFlightControl.sproj'
-          job-name: 'ModelCheckQuadFlightC'
+          scade-dir: ${{ env.SCADE_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ env.JOB_MODEL_CHECK }}
+
+      - name: Run model tests execution
+        uses: ./tests_exec
+        with:
+          scade-dir: ${{ env.SCADE_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ matrix.job-tests }}
+
+      - name: Run model code generation
+        uses: ./code_gen
+        with:
+          scade-dir: ${{ env.SCADE_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ env.JOB_CODE_GEN }}
