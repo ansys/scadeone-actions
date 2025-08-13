@@ -50,6 +50,14 @@ inputs:
 
   # Optional inputs
 
+  model-check-report:
+    description: |
+      Path to the model check report file. If not provided, the report will be
+      saved in the 'output' directory with the name 'model_check_report.txt'.
+    required: false
+    default: 'output/model_check_report.txt'
+    type: string
+
   python-version:
     description: |
       Python version used for installing and execution of the build process.
@@ -70,15 +78,19 @@ inputs:
 runs:
   using: "composite"
 
+  # On Windows Git bash and Python must be in the path of the runner.
+  # A start-runner.bat script should add the paths to the PATH environment variable
+  # before to run the runner.
+
   steps:
     - name: "Install Git and clone project"
-      uses: actions/checkout@v2
-
+      uses: actions/checkout@v4
+    
     - name: "Set up Python"
-      uses: ansys/actions/_setup-python@v10.0.14
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ inputs.python-version }}
-        use-cache: ${{ inputs.use-python-cache }}
+        cache: ${{ inputs.use-python-cache }}
 
     - name: "Install dependencies"
       shell: bash
@@ -98,4 +110,12 @@ runs:
         sys.path.insert(1, '${GITHUB_ACTION_PATH}/../src/')
         from scadeone_actions import scadeone_actions
         # Run the model check action with the provided inputs.
-        scadeone_actions(['model_check', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', 'output/model_check_report.txt'])
+        scadeone_actions(['model_check', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', '${{ inputs.model-check-report }}'])
+
+    - name: "Upload model check report"
+      uses: actions/upload-artifact@v4
+      with:
+        name: model-check-report
+        path: ${{ inputs.model-check-report }}
+        if-no-files-found: error
+        retention-days: 7
