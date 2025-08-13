@@ -96,4 +96,6 @@ runs:
         # the action being run.
         # It is used to ensure that the scadeone_actions module can be found.
         sys.path.insert(1, '${GITHUB_ACTION_PATH}/../src/')
+        from scadeone_actions import scadeone_actions
+        # Run the model check action with the provided inputs.
         scadeone_actions ['model_check', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', 'output/model_check_report.txt']
