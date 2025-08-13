@@ -14,10 +14,6 @@ on:
 
 jobs:
   model_check:
-    strategy:
-      matrix:
-        # Define the list of jobs to run for model tests execution
-        job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     runs-on: [self-hosted, 'SCADE']
     steps:
       - name: Checkout repository
@@ -30,6 +26,14 @@ jobs:
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_MODEL_CHECK }}
 
+  tests_exec:
+    needs: model_check
+    runs-on: [self-hosted, 'SCADE']
+    strategy:
+      matrix:
+        # Define the list of jobs to run for model tests execution
+        job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
+    steps:
       - name: Run model tests execution
         uses: ./tests_exec
         with:
@@ -37,6 +41,10 @@ jobs:
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
 
+  code_gen:
+    needs: tests_exec
+    runs-on: [self-hosted, 'SCADE']
+    steps:
       - name: Run model code generation
         uses: ./code_gen
         with:
