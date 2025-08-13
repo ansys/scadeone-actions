@@ -15,9 +15,9 @@ on:
 jobs:
   model_check:
     strategy:
-    matrix:
-      # Define the list of jobs to run for model tests execution
-      job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
+      matrix:
+        # Define the list of jobs to run for model tests execution
+        job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     runs-on: [self-hosted, 'SCADE']
     steps:
       - name: Checkout repository
