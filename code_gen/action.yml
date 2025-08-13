@@ -53,9 +53,9 @@ inputs:
   target-dir:
     description: |
       Path to the generated code, log and mapping files. If not provided, they will be
-      saved in the 'output/gen_code' directory.
+      saved in the 'output/code_gen' directory.
     required: false
-    default: 'output/gen_code'
+    default: 'output/code_gen'
     type: string
 
   python-version:
