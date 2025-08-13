@@ -74,11 +74,11 @@ runs:
     - name: "Install Git and clone project"
       uses: actions/checkout@v2
 
-    # - name: "Set up Python"
-    #   uses: ansys/actions/_setup-python@v10.0.14
-    #   with:
-    #     python-version: ${{ inputs.python-version }}
-    #     use-cache: ${{ inputs.use-python-cache }}
+    - name: "Set up Python"
+      uses: ansys/actions/_setup-python@v10.0.14
+      with:
+        python-version: ${{ inputs.python-version }}
+        use-cache: ${{ inputs.use-python-cache }}
 
     - name: "Install dependencies"
       shell: bash
@@ -89,5 +89,11 @@ runs:
     - name: "Run Scade One Actions"
       shell: python
       run: |
+        import sys
+        # Add the src directory to the Python path so that the scadeone_actions module can
+        # be imported.
+        # The GITHUB_ACTION_PATH environment variable is set by GitHub Actions to the path of
+        # the action being run.
+        # It is used to ensure that the scadeone_actions module can be found.
         sys.path.insert(1, '${GITHUB_ACTION_PATH}/../src/')
         scadeone_actions ['model_check', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', 'output/model_check_report.txt']
