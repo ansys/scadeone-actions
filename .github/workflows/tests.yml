@@ -13,7 +13,14 @@ on:
       - main
 
 jobs:
+  setup:
+    runs-on: [self-hosted, 'SCADE']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
   model_check:
+    needs: setup
     runs-on: [self-hosted, 'SCADE']
     steps:
       - name: Checkout repository
