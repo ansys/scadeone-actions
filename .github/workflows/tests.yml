@@ -2,7 +2,7 @@
 name: main
 
 env:
-  SCADE_DIR: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
+  S1_DIR: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
   PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
   JOB_CODE_GEN: "CodeGen"
@@ -14,14 +14,14 @@ on:
 
 jobs:
   setup:
-    runs-on: [self-hosted, 'SCADE']
+    runs-on: [self-hosted, 'S1']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
   model_check:
     needs: setup
-    runs-on: [self-hosted, 'SCADE']
+    runs-on: [self-hosted, 'S1']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -29,13 +29,13 @@ jobs:
       - name: Run model check action
         uses: ./model_check
         with:
-          scade-dir: ${{ env.SCADE_DIR }}
+          scade-dir: ${{ env.S1_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_MODEL_CHECK }}
 
   tests_exec:
     needs: model_check
-    runs-on: [self-hosted, 'SCADE']
+    runs-on: [self-hosted, 'S1']
     strategy:
       matrix:
         # Define the list of jobs to run for model tests execution
@@ -44,17 +44,17 @@ jobs:
       - name: Run model tests execution
         uses: ./tests_exec
         with:
-          scade-dir: ${{ env.SCADE_DIR }}
+          scade-dir: ${{ env.S1_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
 
   code_gen:
     needs: tests_exec
-    runs-on: [self-hosted, 'SCADE']
+    runs-on: [self-hosted, 'S1']
     steps:
       - name: Run model code generation
         uses: ./code_gen
         with:
-          scade-dir: ${{ env.SCADE_DIR }}
+          scade-dir: ${{ env.S1_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
