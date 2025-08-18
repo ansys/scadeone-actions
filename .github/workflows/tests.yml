@@ -44,7 +44,7 @@ jobs:
   tests_exec:
     #needs: model_check
     runs-on: [self-hosted, 'S1']
-    needs: setup
+    needs: model_check
     strategy:
       matrix:
         # Define the list of jobs to run for model tests execution
@@ -69,7 +69,7 @@ jobs:
   code_gen:
     #needs: tests_exec
     runs-on: [self-hosted, 'S1']
-    needs: setup
+    needs: tests_exec
     steps:
       - name: Set S1_DIR based on OS
         shell: bash

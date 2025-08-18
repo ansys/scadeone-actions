@@ -100,13 +100,15 @@ runs:
     - name: "Run Scade One Actions"
       shell: python
       run: |
+        import os
         import sys
         # Add the src directory to the Python path so that the scadeone_actions module can
         # be imported.
         # The GITHUB_ACTION_PATH environment variable is set by GitHub Actions to the path of
         # the action being run.
         # It is used to ensure that the scadeone_actions module can be found.
-        sys.path.insert(1, '${GITHUB_ACTION_PATH}/../src/')
+        src_path = os.path.abspath(os.path.join(os.environ["GITHUB_ACTION_PATH"], "..", "src"))
+        sys.path.insert(1, src_path)
         from scadeone_actions import scadeone_actions
         # Run the Scade One action with the provided inputs.
         scadeone_actions(['code_gen', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', '${{ inputs.target-dir }}'])
