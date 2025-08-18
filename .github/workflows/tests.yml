@@ -15,8 +15,15 @@ on:
 
 jobs:
 
+  setup:
+    runs-on: [self-hosted, 'S1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
   model_check:
     runs-on: [self-hosted, 'S1']
+    needs: setup
     steps:
       - name: Set S1_DIR based on OS
         shell: bash
@@ -37,6 +44,7 @@ jobs:
   tests_exec:
     #needs: model_check
     runs-on: [self-hosted, 'S1']
+    needs: setup
     strategy:
       matrix:
         # Define the list of jobs to run for model tests execution
@@ -61,6 +69,7 @@ jobs:
   code_gen:
     #needs: tests_exec
     runs-on: [self-hosted, 'S1']
+    needs: setup
     steps:
       - name: Set S1_DIR based on OS
         shell: bash
