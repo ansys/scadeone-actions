@@ -100,6 +100,8 @@ runs:
     - name: "Run Scade One Actions"
       shell: python
       run: |
+        ## debug
+        print("GITHUB_ACTION_PATH: " + '${GITHUB_ACTION_PATH}')
         import sys
         # Add the src directory to the Python path so that the scadeone_actions module can
         # be imported.
@@ -108,8 +110,6 @@ runs:
         # It is used to ensure that the scadeone_actions module can be found.
         sys.path.insert(1, '${GITHUB_ACTION_PATH}/../src/')
         from scadeone_actions import scadeone_actions
-        ## debug
-        print("GITHUB_ACTION_PATH: " + '${GITHUB_ACTION_PATH}')
         # Run the Scade One action with the provided inputs.
         scadeone_actions(['model_check', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', '${{ inputs.model-check-report }}'])
 
