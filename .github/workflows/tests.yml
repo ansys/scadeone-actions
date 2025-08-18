@@ -32,7 +32,6 @@ jobs:
           scade-dir: ${{ env.S1_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_MODEL_CHECK }}
-          python-version: '3.12'
 
   tests_exec:
     #needs: model_check
@@ -56,7 +55,6 @@ jobs:
           scade-dir: ${{ env.S1_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
-          python-version: '3.12'
 
   code_gen:
     #needs: tests_exec
@@ -76,4 +74,3 @@ jobs:
           scade-dir: ${{ env.S1_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
-          python-version: '3.12'
