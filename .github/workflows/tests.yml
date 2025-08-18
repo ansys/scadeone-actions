@@ -2,7 +2,8 @@
 name: main
 
 env:
-  S1_DIR: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
+  S1_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
+  S1_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne-develop-2025.06.27.0701/'
   PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
   JOB_CODE_GEN: "CodeGen"
@@ -17,6 +18,14 @@ jobs:
   model_check:
     runs-on: [self-hosted, 'S1']
     steps:
+      - name: Set S1_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
       - name: Run model check action
         uses: ./model_check
         with:
@@ -25,13 +34,21 @@ jobs:
           job-name: ${{ env.JOB_MODEL_CHECK }}
 
   tests_exec:
-    needs: model_check
+    #needs: model_check
     runs-on: [self-hosted, 'S1']
     strategy:
       matrix:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
+      - name: Set S1_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
       - name: Run model tests execution
         uses: ./tests_exec
         with:
@@ -40,9 +57,17 @@ jobs:
           job-name: ${{ matrix.job-tests }}
 
   code_gen:
-    needs: tests_exec
+    #needs: tests_exec
     runs-on: [self-hosted, 'S1']
     steps:
+      - name: Set S1_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
       - name: Run model code generation
         uses: ./code_gen
         with:
