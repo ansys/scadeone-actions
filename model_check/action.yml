@@ -109,7 +109,7 @@ runs:
         sys.path.insert(1, '${GITHUB_ACTION_PATH}/../src/')
         from scadeone_actions import scadeone_actions
         ## debug
-        print("GITHUB_ACTION_PATH: " + ${GITHUB_ACTION_PATH})
+        print("GITHUB_ACTION_PATH: " + '${GITHUB_ACTION_PATH}')
         # Run the Scade One action with the provided inputs.
         scadeone_actions(['model_check', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', '${{ inputs.model-check-report }}'])
 
