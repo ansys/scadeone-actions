@@ -101,7 +101,8 @@ runs:
       shell: python
       run: |
         ## debug
-        print("GITHUB_ACTION_PATH: " + '${GITHUB_ACTION_PATH}')
+        print("debug:")
+        print('${GITHUB_ACTION_PATH}/../src/')
         import sys
         # Add the src directory to the Python path so that the scadeone_actions module can
         # be imported.
