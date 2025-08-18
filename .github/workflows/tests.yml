@@ -13,19 +13,10 @@ on:
       - main
 
 jobs:
-  setup:
-    runs-on: [self-hosted, 'S1']
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
   model_check:
-    needs: setup
     runs-on: [self-hosted, 'S1']
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Run model check action
         uses: ./model_check
         with:
