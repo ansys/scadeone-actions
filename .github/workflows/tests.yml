@@ -59,7 +59,7 @@ jobs:
             echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
           else
             echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
-            echo "LD_LIBRARY_PATH=${{ env.S1_DIR }}/tools/simulator:${{ env.S1_DIR }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+            echo "LD_LIBRARY_PATH=${{ env.S1_DIR_LINUX }}/tools/simulator:${{ env.S1_DIR_LINUX }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
           fi
       - name: Run model tests execution
         uses: ./tests_exec
