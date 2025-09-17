@@ -1,6 +1,6 @@
 code_gen:
   name: "Code generation basic example"
-  runs-on: [self-hosted, 'Scade One']
+  runs-on: [self-hosted, 'S1']
   steps:
     - name: "Generate code"
       uses: ansys/scadeone-actions/code_gen@{{ version }}

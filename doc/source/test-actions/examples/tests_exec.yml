@@ -1,6 +1,6 @@
 tests_exec:
   name: "Test execution basic example"
-  runs-on: [self-hosted, 'Scade One']
+  runs-on: [self-hosted, 'S1']
   steps:
     - name: "Execute tests"
       uses: ansys/scadeone-actions/tests_exec@{{ version }}

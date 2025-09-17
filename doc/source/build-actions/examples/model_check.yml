@@ -1,6 +1,6 @@
 model_check:
   name: "Model check basic example"
-  runs-on: [self-hosted, 'Scade One']
+  runs-on: [self-hosted, 'S1']
   steps:
     - name: "Check model"
       uses: ansys/scadeone-actions/model_check@{{ version }}
