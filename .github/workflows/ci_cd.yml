@@ -130,6 +130,12 @@ jobs:
           use-python-cache: false
           dependencies: "texlive-fonts-extra qpdf"
 
+  setup:
+    runs-on: [self-hosted, 'S1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
   model_check:
     runs-on: [self-hosted, 'S1']
     needs: setup
@@ -196,15 +202,6 @@ jobs:
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
           python-version: '3.11'
-
-  tests:
-    name: "All Tests"
-    needs: [model_check, code_gen, tests_exec]
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Synchronization"
-        run: |
-          echo Tests completed
 
   doc-deploy-dev:
     name: "Deploy developers documentation"
