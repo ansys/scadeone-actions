@@ -130,347 +130,76 @@ jobs:
           use-python-cache: false
           dependencies: "texlive-fonts-extra qpdf"
 
-  python-tests:
-    # tests for python actions
-    name: "Python Tests"
-    runs-on: [self-hosted, 'Scade One']
+  model_check:
+    runs-on: [self-hosted, 'S1']
+    needs: setup
+    steps:
+      - name: Set S1_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
+      - name: Run model check action
+        uses: ./model_check
+        with:
+          scade-dir: ${{ env.S1_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ env.JOB_MODEL_CHECK }}
+          python-version: '3.11'
+
+  tests_exec:
+    #needs: model_check
+    runs-on: [self-hosted, 'S1']
+    needs: model_check
     strategy:
       matrix:
-        scade-version: ['23.2']
-      fail-fast: false
+        # Define the list of jobs to run for model tests execution
+        job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
-      - name: "Execute setup.py tests"
-        uses: ./scade-tests-pytest
+      - name: Set S1_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+            echo "LD_LIBRARY_PATH=${{ env.S1_DIR_LINUX }}/tools/simulator:${{ env.S1_DIR_LINUX }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+          fi
+      - name: Run model tests execution
+        uses: ./tests_exec
         with:
-          scade-version: ${{ matrix.scade-version }}
-          library-dir: "tests/python-setup"
-          pytest-postargs: "tests/python-setup/tests -vv"
-          checkout: false
+          scade-dir: ${{ env.S1_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ matrix.job-tests }}
+          python-version: '3.11'
 
-      - name: "Execute pyproject tests"
-        uses: ./scade-tests-pytest
-        with:
-          scade-version: ${{ matrix.scade-version }}
-          library-dir: "tests/python-pyproject"
-          pytest-postargs: "tests/python-pyproject/tests -vv"
-          checkout: false
-
-  unit-tests:
-    # tests for Python code included in actions
-    # cannot reuse ./scade-tests-pytest: the tested scripts are not part of a Python package
-    name: "Run Python unit tests"
-    runs-on: [self-hosted, 'SCADE']
-    strategy:
-      matrix:
-        scade-version: ['23.2']
-      fail-fast: false
+  code_gen:
+    #needs: tests_exec
+    runs-on: [self-hosted, 'S1']
+    needs: tests_exec
     steps:
-      - name: "Install Git and clone project"
-        uses: actions/checkout@v5
-
-      - name: "Get SCADE installation directory"
-        uses: ./get-scade-dir
-        id: get-scade-dir
-        with:
-          scade-version: ${{ matrix.scade-version }}
-
-      - name: "Get SCADE Python interpreter"
-        uses: ./get-scade-python
-        id: get-scade-python
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-
-      - name: "Create Python virtual environment"
-        uses: ./create-scade-venv
-        id: create-scade-venv
-        with:
-          python-dir: ${{ steps.get-scade-python.outputs.python-dir }}
-          target-dir: '.venvs'
-          target-name: ${{ steps.get-scade-python.outputs.python-name }}
-
-      - name: "Check python"
-        shell: cmd
+      - name: Set S1_DIR based on OS
+        shell: bash
         run: |
-          :: Check python
-          echo Activate the virtual environment
-          call ${{ steps.create-scade-venv.outputs.scripts-dir }}\activate.bat"
-          python.exe --version
-          :: store the "exe for the next steps"
-          echo PYTHON_EXE=${{ steps.create-scade-venv.outputs.scripts-dir }}\python.exe>> %GITHUB_ENV%
-
-      - name: "Update pip"
-        shell: cmd
-        run: |
-          %PYTHON_EXE% -m pip install -U pip
-
-      - name: "Install test requirements"
-        shell: cmd
-        run: |
-          echo Installing test dependencies from requirements_tests.txt
-          %PYTHON_EXE% -m pip install -r requirements/requirements_tests.txt
-
-      - name: "Executing test suite"
-        shell: cmd
-        run: |
-          :: Run tests
-          %PYTHON_EXE% -m pytest --ignore=tests/python-pyproject --ignore=tests/python-setup --basetemp=tmp --cov-report=term --cov-branch --cov-report=html:.cov/html --cov-report=xml:.cov/xml
-
-      # - name: "Upload coverage reports to Codecov"
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     slug: ansys/scadeone-actions
-      #     files: .cov/xml
-
-  suite-tests:
-    # tests for SCADE Suite actions
-    name: "Suite Tests"
-    runs-on: [self-hosted, 'SCADE']
-    strategy:
-      matrix:
-        scade-version: ['23.2']
-      fail-fast: false
-    steps:
-      - name: "Check out the repository"
-        uses: actions/checkout@v5
-
-      - name: "Get SCADE installation directory"
-        uses: ./get-scade-dir
-        id: get-scade-dir
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
+      - name: Run model code generation
+        uses: ./code_gen
         with:
-          scade-version: ${{ matrix.scade-version }}
-
-      - name: "Generate with suite-code"
-        uses: ./suite-code
-        id: suite-code-generate
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/suite-code/Model/Model.etp"
-          configuration: "Suite Code"
-          build: "false"
-          checkout: false
-
-      - name: "Upload code target directory to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-suite-code-target-directory"
-          path: "${{ steps.suite-code-generate.outputs.target-directory }}/*.*"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Build with suite-code"
-        uses: ./suite-code
-        id: suite-code-build
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/suite-code/Model/Model.etp"
-          configuration: "Simulation"
-          build: "true"
-          checkout: false
-
-      - name: "Log the target directories"
-        shell: cmd
-        run: |
-          echo Generation target directory: ${{ steps.suite-code-generate.outputs.target-directory }}
-          echo Build target directory: ${{ steps.suite-code-build.outputs.target-directory }}
-
-      - name: "Acquire the model coverage with test-coverage"
-        uses: ./test-coverage
-        id: test-coverage
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          test-project: "tests/test-coverage/Test/Test.etp"
-          results-project: "tests/test-coverage/Results/Results.etp"
-          configuration: "Test"
-          cov-status: "cov_status/Model.json"
-          checkout: false
-
-      - name: "Upload coverage status to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "coverage-status"
-          path: "cov_status\\Model.json"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Run the tests with test-execute"
-        uses: ./test-execute
-        id: test-execute
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          test-project: "tests/test-execute/Test/Test.etp"
-          results-project: "tests/test-execute/Results/Results.etp"
-          configuration: "Test Success"
-          junit-report: "junit-reports/Model.xml"
-          checkout: false
-
-      - name: "Upload JUnit report to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "junit-report"
-          path: "junit-reports\\Model.xml"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Compute metrics with suite-metrics"
-        uses: ./suite-metrics
-        id: suite-metrics
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/suite-metrics/Model/Model.etp"
-          configuration: "MetricRule"
-          checkout: false
-
-      - name: "Upload metrics report artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "metrics"
-          path: "${{ steps.suite-metrics.outputs.report }}"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Check custom rules with suite-rules"
-        uses: ./suite-rules
-        id: suite-rules
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/suite-rules/Model/Model.etp"
-          configuration: "RuleSuccess"
-          checkout: false
-
-      - name: "Upload Custom rules report artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "check-custom-rules"
-          path: "${{ steps.suite-rules.outputs.report }}"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Check with suite-check"
-        uses: ./suite-check
-        id: suite-check
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/suite-check/Model/Model.etp"
-          configuration: "KCG Expall"
-          checkout: false
-
-      - name: "Upload Checker report artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-suite-check-report"
-          path: "${{ steps.suite-check.outputs.report }}"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Generate the documentation with suite-report"
-        uses: ./suite-report
-        id: suite-report
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/suite-report/Model/Model.etp"
-          configuration: "RTF"
-          checkout: false
-
-      - name: "Upload the document to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-suite-report"
-          path: "${{ steps.suite-report.outputs.report }}"
-          retention-days: 7
-          if-no-files-found: error
-
-  display-tests:
-    # tests for SCADE Display actions
-    name: "Display Tests"
-    runs-on: [self-hosted, 'SCADE']
-    strategy:
-      matrix:
-        scade-version: ['24.2']
-      fail-fast: false
-    steps:
-      - name: "Check out the repository"
-        uses: actions/checkout@v5
-
-      - name: "Get SCADE installation directory"
-        uses: ./get-scade-dir
-        id: get-scade-dir
-        with:
-          scade-version: ${{ matrix.scade-version }}
-
-      - name: "Generate the documentation with display-report"
-        uses: ./display-report
-        id: display-report
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/display-report/Model/Model.etp"
-          configuration: "RTF"
-          checkout: false
-
-      - name: "Upload the document to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-display-report"
-          path: "${{ steps.display-report.outputs.report }}"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Generate code with display-generate"
-        uses: ./display-generate
-        id: display-generate-code
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/display-generate/Model/Model.etp"
-          configuration: "Code"
-          checkout: false
-
-      - name: "Upload code target directory to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-display-code-target-directory"
-          path: "${{ steps.display-generate-code.outputs.target-directory }}/*.*"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Generate standalone with display-generate"
-        uses: ./display-generate
-        id: display-generate-standalone
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/display-generate/Model/Model.etp"
-          configuration: "Windows"
-          checkout: false
-
-      - name: "Upload standalone target directory to artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-display-standalone-target-directory"
-          path: "${{ steps.display-generate-standalone.outputs.target-directory }}/*.*"
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: "Check with display-check"
-        uses: ./display-check
-        id: display-check
-        with:
-          scade-dir: ${{ steps.get-scade-dir.outputs.scade-directory }}
-          project: "tests/display-check/Model/Model.etp"
-          specification: "specification.sgfx"
-          format: 'TXT'
-          output: 'design-checker-report-specification.txt'
-          checkout: false
-
-      - name: "Upload Checker report artifacts"
-        uses: actions/upload-artifact@v4
-        with:
-          name: "scade-display-check-report"
-          path: 'design-checker-report-specification.txt'
-          retention-days: 7
-          if-no-files-found: error
+          scade-dir: ${{ env.S1_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ env.JOB_CODE_GEN }}
+          python-version: '3.11'
 
   tests:
     name: "All Tests"
-    needs: [display-tests, python-tests, unit-tests, suite-tests]
+    needs: [model_check, code_gen, tests_exec]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
