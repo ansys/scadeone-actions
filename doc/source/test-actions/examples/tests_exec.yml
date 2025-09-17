@@ -1,0 +1,10 @@
+tests_exec:
+  name: "Test execution basic example"
+  runs-on: [self-hosted, 'Scade One']
+  steps:
+    - name: "Execute tests"
+      uses: ansys/scadeone-actions/tests_exec@{{ version }}
+      with:
+        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
+        job-name: 'QuadTest'

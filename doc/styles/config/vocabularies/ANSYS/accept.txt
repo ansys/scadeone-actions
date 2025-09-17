@@ -1,0 +1,14 @@
+Ansys
+ansys
+Actions
+CI
+dev
+GitHub
+pytest
+PyPI
+Python
+SCADE
+Scade One
+TXT
+(?!)scade
+(?!)python

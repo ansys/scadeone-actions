@@ -21,23 +21,23 @@
 # SOFTWARE.
 
 name: |
-  'Scade One model check'
+  Scade One model check
 
 description: |
-  'Run a Scade One actions workflow for model checking'
+  Run a Scade One Actions workflow for model checking
 
 inputs:
 
   scade-dir:
     description: |
-      "Scade One installation directory. This is the directory where the
-      Scade One executable is located. It is used to run the Scade One actions."
+      Scade One installation directory. This is the directory where the
+      Scade One executable is located. It is used to run the Scade One actions.
     required: true
     type: string
 
   project:
     description: >
-      Path of the SCADE Suite project.
+      Path of the Scade One project.
     required: true
     type: string
 

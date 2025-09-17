@@ -33,12 +33,12 @@ inputs:
 
   scade-dir:
     description: >
-      Ansys SCADE installation directory.
+      Ansys Scade One installation directory.
     required: true
 
   project:
     description: >
-      Path of the SCADE Suite project.
+      Path of the Scade One project.
     required: true
 
 
