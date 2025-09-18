@@ -6,7 +6,7 @@ on:
     tags:
       - "v*.*.*"
     branches:
-      - ".*"
+      - main
 
 env:
   MAIN_PYTHON_VERSION: '3.10'
@@ -204,7 +204,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    #needs: [code_gen]
+    needs: [code_gen]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
