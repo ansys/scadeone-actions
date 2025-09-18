@@ -183,7 +183,6 @@ jobs:
           python-version: '3.11'
 
   code_gen:
-    #needs: tests_exec
     runs-on: [self-hosted, 'S1']
     needs: tests_exec
     steps:
@@ -202,6 +201,15 @@ jobs:
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
           python-version: '3.11'
+
+  tests:
+    name: "All Tests"
+    #needs: [code_gen]
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Synchronization"
+        run: |
+          echo Tests completed
 
   doc-deploy-dev:
     name: "Deploy developers documentation"
