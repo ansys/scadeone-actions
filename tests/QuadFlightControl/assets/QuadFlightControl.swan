@@ -46,7 +46,7 @@ node QuadFlightControl (motorStates: T::MotorsFault;
     #pragma diagram {"dir":"sw","xy":"H134238;V85265"} #end)
     (#6 group byname
     #pragma diagram {"dir":"nw","xy":"H210345;V83365"} #end)
-    
+
     (#1386 wire #1374 => #1382 .(desiredAttitude))
     (#1387 wire #1375 => #1376 .(motorStates))
     (#1391 wire #1376 .(motorHealthStates) => #1379, #6
@@ -113,7 +113,7 @@ node MotorControl (attitudeCmd: T::AttitudeType;
     #pragma diagram {"xy":"H166655;V214972","wh":"500;47125"} #end)
     (#2 def rotorCmd
     #pragma diagram {"xy":"H223751;V301240","wh":"11501;3200"} #end)
-    
+
     (#1134 wire #1124 => #1128 .(u3)
     #pragma diagram {"wp":"v0|#1124 #1128"} #end)
     (#1135 wire #1127 => #1126 .(a))
@@ -328,7 +328,7 @@ node FlightControl (desiredAttitude: T::AttitudeType;
     #pragma diagram {"xy":"H140580;V163115","wh":"17126;3200"} #end)
     (#1255 expr desiredPitchSat
     #pragma diagram {"xy":"H140040;V131105","wh":"18064;3200"} #end)
-    
+
     (#1256 wire #1217 => #1058)
     (#1257 wire #1215 => #1213)
     (#1258 wire #1222 => #1059)
@@ -382,7 +382,7 @@ node FlightControl (desiredAttitude: T::AttitudeType;
     (#1292 wire #1203 => #1046)
     (#1293 wire #1193 => #1192)
     (#1294 wire #1254 => #1249 .(target))
-    
+
     (var
         currentPitchFiltered: float32;
         currentRollFiltered: float32;
@@ -408,7 +408,7 @@ node FlightControl (desiredAttitude: T::AttitudeType;
                                       #pragma diagram {"xy":"h2813;v10600","wh":"23200;14000"} #end)
             (#1241 def desiredPitchSat
             #pragma diagram {"xy":"h36770;v-9600","wh":"18064;3200"} #end)
-            
+
             (#1242 wire #1236 => #1240)
             (#1243 wire #1237 => #1238)
             (#1244 wire #1238 => #1241
@@ -432,7 +432,7 @@ node FlightControl (desiredAttitude: T::AttitudeType;
             #pragma diagram {"xy":"h36770;v-9688","wh":"18064;3200"} #end)
             (#1231 $SatRoll block (QuadUtils::LimiterSymmetrical \ bandOrigin: 0, tolerance: PI / 8)
                                   #pragma diagram {"xy":"h3047;v9787","wh":"23690;14000"} #end)
-            
+
             (#1232 wire #1228 .(lsOutput) => #1230
             #pragma diagram {"wp":"v0|#1228 #1230"} #end)
             (#1233 wire #1231 .(lsOutput) => #1229
@@ -516,7 +516,7 @@ node PID (target: float32;
     #pragma diagram {"xy":"H166021;V55095","wh":"25000;18000"} #end)
     (#8 block ({op_expr%function x => x * T_CYCLE%op_expr})
               #pragma diagram {"xy":"H78124;V58295","wh":"13348;7000"} #end)
-    
+
     (#1325 wire #1323 => #1089)
     (#1328 wire #1303 => #1077
     #pragma diagram {"wp":"#1303 h4575 v-2610 #1077"} #end)
@@ -582,7 +582,7 @@ function PitchRollFilter (in: float32;
     #pragma diagram {"xy":"H18638;V39295"} #end)
     (#0 block ({op_expr%function x => x < band%op_expr})
               #pragma diagram {"xy":"H97870;V26200","wh":"12000;7000"} #end)
-    
+
     (#1367 wire #1364 => #1362, #1091
     #pragma diagram {"wp":"#1364 h5711[#1362, v13530 #1091]"} #end)
     (#1368 wire #1362 .(lusOutput) => #1360, #1093, #1092
@@ -594,7 +594,7 @@ function PitchRollFilter (in: float32;
     #pragma diagram {"wp":"v0|#0 h11320 #1095"} #end)
     (#2 wire #1360 => #0 .(x)
     #pragma diagram {"wp":"v-713|#1360 #0"} #end)
-    
+
     (var
         #pragma cg probe #end  saturate: bool;)
 }
@@ -630,7 +630,7 @@ function RotorControl (u1: float32;
                   - u4 / (4.0 * DRAG_TORQ)
     #pragma diagram {"xy":"H86592;V24680","wh":"34003;6078"} #end)
     (#1407 expr u1 / (4.0 * THRUST_COEF)
-                  + u3 / (2.0 * L * THRUST_COEF) 
+                  + u3 / (2.0 * L * THRUST_COEF)
                   + u4 / (4.0 * DRAG_TORQ)
     #pragma diagram {"xy":"H87060;V15680","wh":"34941;6078"} #end)
     (#1408 expr 0.0
@@ -667,7 +667,7 @@ function RotorControl (u1: float32;
     #pragma diagram {"xy":"H135590;V81410"} #end)
     (#1424 def w1
     #pragma diagram {"xy":"H135590;V68010"} #end)
-    
+
     (#1425 wire #1416 => #1421
     #pragma diagram {"wp":"v0|#1416 #1421"} #end)
     (#1426 wire #1411 => #1418 .(x)
@@ -694,7 +694,7 @@ function RotorControl (u1: float32;
     #pragma diagram {"wp":"v-611|#1412 #1419"} #end)
     (#1441 wire #1417 => #1422
     #pragma diagram {"wp":"v0|#1417 #1422"} #end)
-    
+
     (var
         lW1: float32;
         lW2: float32;
@@ -737,7 +737,7 @@ node YawControl (targetYaw: float32;
                  #pragma diagram {"xy":"H167251;V3670","wh":"37265;12405"} #end)
     (#1474 def targetR
     #pragma diagram {"xy":"H224865;V7185","wh":"12000;3200"} #end)
-    
+
     (#1475 wire #1444 => #1473 .(current))
     (#1476 wire #1472 => #1108
     #pragma diagram {"wp":"v-580|#1472 #1108"} #end)
@@ -750,7 +750,7 @@ node YawControl (targetYaw: float32;
     (#1481 wire #1443 => #1109)
     (#1482 wire #1470 => #1445)
     (#1483 wire #1471 => #1472)
-    
+
     (var
         cond: bool;
         lTarget: float32;)
@@ -789,7 +789,7 @@ node YawControl (targetYaw: float32;
             #pragma diagram {"xy":"h-68138;v6525","wh":"13376;3200"} #end)
             (#1457 expr targetYaw
             #pragma diagram {"xy":"h-68138;v-4625","wh":"12438;3200"} #end)
-            
+
             (#1458 wire #1451 => #1100)
             (#1459 wire #1456 => #1104, #1098
             #pragma diagram {"wp":"#1456 h7072[v-7350 #1104, #1098]"} #end)
@@ -811,7 +811,7 @@ node YawControl (targetYaw: float32;
             #pragma diagram {"xy":"h47919;v350","wh":"13376;3200"} #end)
             (#1447 def lTarget
             #pragma diagram {"xy":"h69889;v350","wh":"10563;3200"} #end)
-            
+
             (#1448 wire #1446 => #1447)
         #pragma diagram {"xy":"h0;v14825","wh":"156590;9200"} #end
         }
