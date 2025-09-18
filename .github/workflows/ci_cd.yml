@@ -129,7 +129,6 @@ jobs:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           use-python-cache: false
           dependencies: qpdf
-          # dependencies: "texlive-fonts-extra qpdf"
 
   setup:
     runs-on: [self-hosted, 'S1']
