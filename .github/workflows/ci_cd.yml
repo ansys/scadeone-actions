@@ -119,8 +119,6 @@ jobs:
 
   doc-build:
     name: "Doc build"
-    env:
-      PAPERSIZE: a4
     runs-on: ubuntu-latest
     needs: doc-style
     steps:
@@ -130,7 +128,7 @@ jobs:
           skip-install: true
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           use-python-cache: false
-          dependencies: "texlive-fonts-extra qpdf"
+          # dependencies: "texlive-fonts-extra qpdf"
 
   setup:
     runs-on: [self-hosted, 'S1']
