@@ -27,10 +27,8 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from ansys.scadeone.core.job import Job, JobType
-# requires pyscadeone package >= 0.8 (model check job)
 from ansys.scadeone.core.scadeone import ScadeOne
 
-# from ansys.scadeone.core.svc.fmu import FMU_2_Export
 from utilities import get_scade_one_home, sone2junit
 
 # -*- coding: utf-8 -*-
