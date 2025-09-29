@@ -30,8 +30,8 @@ inputs:
 
   scade-dir:
     description: |
-      Scade One installation directory. This is the directory where the
-      Scade One executable is located. It is used to run the Scade One actions.
+      Scade One installation directory, e.g.
+      'C:\Program Files\Ansys Inc\v252\Scade One' or '/opt/AnsysInc/v252/ScadeOne/'.
     required: true
     type: string
 
