@@ -14,7 +14,7 @@ env:
   test-library-name: 'ansys-scadeone-actions'
   # set Ansys license if not configured on the runner
   ANSYSLMD_LICENSE_FILE: '1055@nicwindev01.win.ansys.com'
-  S1_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One develop-2025.06.27.0701'
+  S1_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
   S1_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne-develop-2025.06.27.0701/'
   PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
