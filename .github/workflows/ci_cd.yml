@@ -157,6 +157,8 @@ jobs:
           fi
       - name: Run model check action
         uses: ./model_check
+        env:
+          AGENT_TOOLSDIRECTORY: C:\gha-tools 
         with:
           scade-dir: ${{ env.SCADE_ONE_DIR }}
           project: ${{ env.PROJECT }}
