@@ -1,0 +1,2 @@
+ansys-scadeone-core
+junitparser
