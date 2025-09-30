@@ -14,8 +14,8 @@ env:
   test-library-name: 'ansys-scadeone-actions'
   # set Ansys license if not configured on the runner
   ANSYSLMD_LICENSE_FILE: '1055@nicwindev01.win.ansys.com'
-  S1_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
-  S1_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne-develop-2025.06.27.0701/'
+  SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One dev'
+  SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne/'
   PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
   JOB_CODE_GEN: "CodeGen"
@@ -147,18 +147,18 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne']
     needs: setup
     steps:
-      - name: Set S1_DIR based on OS
+      - name: Set SCADE_ONE_DIR based on OS
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
           else
-            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
           fi
       - name: Run model check action
         uses: ./model_check
         with:
-          scade-dir: ${{ env.S1_DIR }}
+          scade-dir: ${{ env.SCADE_ONE_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_MODEL_CHECK }}
           python-version: '3.11'
@@ -172,19 +172,19 @@ jobs:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
-      - name: Set S1_DIR based on OS
+      - name: Set SCADE_ONE_DIR based on OS
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
           else
-            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
-            echo "LD_LIBRARY_PATH=${{ env.S1_DIR_LINUX }}/tools/simulator:${{ env.S1_DIR_LINUX }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
+            echo "LD_LIBRARY_PATH=${{ env.SCADE_ONE_DIR_LINUX }}/tools/simulator:${{ env.SCADE_ONE_DIR_LINUX }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
           fi
       - name: Run model tests execution
         uses: ./tests_exec
         with:
-          scade-dir: ${{ env.S1_DIR }}
+          scade-dir: ${{ env.SCADE_ONE_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
           python-version: '3.11'
@@ -193,18 +193,18 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne']
     needs: tests_exec
     steps:
-      - name: Set S1_DIR based on OS
+      - name: Set SCADE_ONE_DIR based on OS
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "S1_DIR=${{ env.S1_DIR_WINDOWS }}" >> $GITHUB_ENV
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
           else
-            echo "S1_DIR=${{ env.S1_DIR_LINUX }}" >> $GITHUB_ENV
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
           fi
       - name: Run model code generation
         uses: ./code_gen
         with:
-          scade-dir: ${{ env.S1_DIR }}
+          scade-dir: ${{ env.SCADE_ONE_DIR }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
           python-version: '3.11'
