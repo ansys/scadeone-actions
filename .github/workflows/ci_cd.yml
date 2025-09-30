@@ -138,13 +138,13 @@ jobs:
           dependencies: qpdf
 
   setup:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOne', 'Windows']
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
   model_check:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOne', 'Windows']
     needs: setup
     steps:
       - name: Set SCADE_ONE_DIR based on OS
@@ -157,8 +157,6 @@ jobs:
           fi
       - name: Run model check action
         uses: ./model_check
-        env:
-          AGENT_TOOLSDIRECTORY: C:\gha-tools 
         with:
           scade-dir: ${{ env.SCADE_ONE_DIR }}
           project: ${{ env.PROJECT }}
@@ -167,7 +165,7 @@ jobs:
 
   tests_exec:
     #needs: model_check
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOne', 'Windows']
     needs: model_check
     strategy:
       matrix:
@@ -192,8 +190,80 @@ jobs:
           python-version: '3.11'
 
   code_gen:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOne', 'Windows']
     needs: tests_exec
+    steps:
+      - name: Set SCADE_ONE_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
+      - name: Run model code generation
+        uses: ./code_gen
+        with:
+          scade-dir: ${{ env.SCADE_ONE_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ env.JOB_CODE_GEN }}
+          python-version: '3.11'
+
+  setup_linux:
+    runs-on: [self-hosted, 'ScadeOne', 'Linux']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+  model_check_linux:
+    runs-on: [self-hosted, 'ScadeOne', 'Linux']
+    needs: setup_linux
+    steps:
+      - name: Set SCADE_ONE_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
+          fi
+      - name: Run model check action
+        uses: ./model_check
+        with:
+          scade-dir: ${{ env.SCADE_ONE_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ env.JOB_MODEL_CHECK }}
+          python-version: '3.11'
+
+  tests_exec_linux:
+    #needs: model_check
+    runs-on: [self-hosted, 'ScadeOne', 'Linux']
+    needs: model_check_linux
+    strategy:
+      matrix:
+        # Define the list of jobs to run for model tests execution
+        job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
+    steps:
+      - name: Set SCADE_ONE_DIR based on OS
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
+          else
+            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
+            echo "LD_LIBRARY_PATH=${{ env.SCADE_ONE_DIR_LINUX }}/tools/simulator:${{ env.SCADE_ONE_DIR_LINUX }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+          fi
+      - name: Run model tests execution
+        uses: ./tests_exec
+        with:
+          scade-dir: ${{ env.SCADE_ONE_DIR }}
+          project: ${{ env.PROJECT }}
+          job-name: ${{ matrix.job-tests }}
+          python-version: '3.11'
+
+  code_gen_linux:
+    runs-on: [self-hosted, 'ScadeOne', 'Linux']
+    needs: tests_exec_linux
     steps:
       - name: Set SCADE_ONE_DIR based on OS
         shell: bash
@@ -213,7 +283,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [code_gen]
+    needs: [code_gen, code_gen_linux]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
