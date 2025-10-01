@@ -13,7 +13,7 @@ env:
   DOCUMENTATION_CNAME: 'actions.scadeone.docs.pyansys.com'
   test-library-name: 'ansys-scadeone-actions'
   SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
-  SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne/'
+  SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOneDebug/'
   PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
   JOB_CODE_GEN: "CodeGen"
@@ -138,13 +138,13 @@ jobs:
 
 
   setup:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOneDebug']
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
   model_check:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOneDebug']
     needs: setup
     steps:
       - name: Set SCADE_ONE_DIR based on OS
@@ -165,7 +165,7 @@ jobs:
 
 
   tests_exec:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOneDebug']
     needs: model_check
     strategy:
       matrix:
@@ -190,7 +190,7 @@ jobs:
           python-version: '3.11'
 
   code_gen:
-    runs-on: [self-hosted, 'ScadeOne']
+    runs-on: [self-hosted, 'ScadeOneDebug']
     needs: tests_exec
     steps:
       - name: Set SCADE_ONE_DIR based on OS
