@@ -148,7 +148,7 @@ jobs:
       - name: Set SCADE_ONE_DIR based on OS
         shell: bash
         run: |
-          echo "${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
+          echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
       - name: Run model check action
         uses: ./model_check
         with:
