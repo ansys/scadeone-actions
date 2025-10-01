@@ -13,7 +13,7 @@ env:
   DOCUMENTATION_CNAME: 'actions.scadeone.docs.pyansys.com'
   test-library-name: 'ansys-scadeone-actions'
   SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
-  SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOneDebug/'
+  SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne/'
   PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
   JOB_CODE_GEN: "CodeGen"
@@ -147,21 +147,14 @@ jobs:
     runs-on: [self-hosted, 'ScadeOneDebug']
     needs: setup
     steps:
-      - name: Set SCADE_ONE_DIR based on OS
-        shell: bash
-        run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
-          else
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
-          fi
       - name: Run model check action
         uses: ./model_check
         with:
-          scade-dir: ${{ env.SCADE_ONE_DIR }}
-          project: ${{ env.PROJECT }}
-          job-name: ${{ env.JOB_MODEL_CHECK }}
-          python-version: '3.11'
+            scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
+            project: ${{ env.PROJECT }}
+            job-name: ${{ env.JOB_MODEL_CHECK }}
+            python-version: '3.11'
+
 
 
   tests_exec:
