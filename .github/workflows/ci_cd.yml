@@ -145,18 +145,10 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne', 'Windows']
     needs: setup
     steps:
-      - name: Set SCADE_ONE_DIR based on OS
-        shell: bash
-        run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
-          else
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
-          fi
       - name: Run model check action
         uses: ./model_check
         with:
-          scade-dir: ${{ env.SCADE_ONE_DIR }}
+          scade-dir: ${{ env.SCADE_ONE_DIR_WINDOWS }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_MODEL_CHECK }}
           python-version: '3.11'
