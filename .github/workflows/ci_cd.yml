@@ -136,13 +136,13 @@ jobs:
           dependencies: qpdf
 
   setup:
-    runs-on: [self-hosted, 'ScadeOne', 'Windows']
+    runs-on: [self-hosted, 'ScadeOneDebug', 'Windows']
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
   model_check:
-    runs-on: [self-hosted, 'ScadeOne', 'Windows']
+    runs-on: [self-hosted, 'ScadeOneDebug', 'Windows']
     needs: setup
     steps:
       - name: Set SCADE_ONE_DIR based on OS
@@ -159,7 +159,7 @@ jobs:
 
   tests_exec:
     #needs: model_check
-    runs-on: [self-hosted, 'ScadeOne', 'Windows']
+    runs-on: [self-hosted, 'ScadeOneDebug', 'Windows']
     needs: model_check
     strategy:
       matrix:
@@ -184,7 +184,7 @@ jobs:
           python-version: '3.11'
 
   code_gen:
-    runs-on: [self-hosted, 'ScadeOne', 'Windows']
+    runs-on: [self-hosted, 'ScadeOneDebug', 'Windows']
     needs: tests_exec
     steps:
       - name: Set SCADE_ONE_DIR based on OS
