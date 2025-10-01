@@ -138,13 +138,13 @@ jobs:
 
 
   setup:
-    runs-on: [self-hosted, 'ScadeOneDebug']
+    runs-on: [self-hosted, 'ScadeOne']
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
   model_check:
-    runs-on: [self-hosted, 'ScadeOneDebug']
+    runs-on: [self-hosted, 'ScadeOne']
     needs: setup
     steps:
       - name: Run model check action
@@ -158,46 +158,29 @@ jobs:
 
 
   tests_exec:
-    runs-on: [self-hosted, 'ScadeOneDebug']
+    runs-on: [self-hosted, 'ScadeOne']
     needs: model_check
     strategy:
       matrix:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
-      - name: Set SCADE_ONE_DIR based on OS
-        shell: bash
-        run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
-          else
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
-            echo "LD_LIBRARY_PATH=${{ env.SCADE_ONE_DIR_LINUX }}/tools/simulator:${{ env.SCADE_ONE_DIR_LINUX }}/tools/simulator/runtimes/linux-x64:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
-          fi
       - name: Run model tests execution
         uses: ./tests_exec
         with:
-          scade-dir: ${{ env.SCADE_ONE_DIR }}
+          scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
           python-version: '3.11'
 
   code_gen:
-    runs-on: [self-hosted, 'ScadeOneDebug']
+    runs-on: [self-hosted, 'ScadeOne']
     needs: tests_exec
     steps:
-      - name: Set SCADE_ONE_DIR based on OS
-        shell: bash
-        run: |
-          if [ "${{ runner.os }}" = "Windows" ]; then
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_WINDOWS }}" >> $GITHUB_ENV
-          else
-            echo "SCADE_ONE_DIR=${{ env.SCADE_ONE_DIR_LINUX }}" >> $GITHUB_ENV
-          fi
       - name: Run model code generation
         uses: ./code_gen
         with:
-          scade-dir: ${{ env.SCADE_ONE_DIR }}
+          scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
           python-version: '3.11'
