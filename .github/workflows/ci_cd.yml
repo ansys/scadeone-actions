@@ -137,17 +137,16 @@ jobs:
 
 
 
-  setup:
-    runs-on: [self-hosted, 'ScadeOne']
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+
 
   model-check:
     name: "Model Check"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: setup
+    # needs: setup
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
       - name: Run model check action
         uses: ./model-check
         with:
@@ -167,6 +166,8 @@ jobs:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
       - name: Run model tests execution
         uses: ./tests-exec
         with:
@@ -180,6 +181,8 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne']
     needs: tests-exec
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
       - name: Run model code generation
         uses: ./code-gen
         with:
