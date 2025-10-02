@@ -6,7 +6,7 @@ Execute Scade One model test actions.
 Test execution
 --------------
 
-.. jinja:: tests_exec
+.. jinja:: tests-exec
 
     {{ description }}
 

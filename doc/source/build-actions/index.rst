@@ -30,7 +30,7 @@ Code generation
 Model check
 -----------
 
-.. jinja:: model_check
+.. jinja:: model-check
 
     {{ description }}
 
