@@ -173,12 +173,13 @@ jobs:
           job-name: ${{ matrix.job-tests }}
           python-version: '3.11'
 
-  code_gen:
+  code-gen:
+    name: "Code Generation"
     runs-on: [self-hosted, 'ScadeOne']
     needs: tests_exec
     steps:
       - name: Run model code generation
-        uses: ./code_gen
+        uses: ./code-gen
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
@@ -188,7 +189,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [code_gen]
+    needs: [code-gen]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"

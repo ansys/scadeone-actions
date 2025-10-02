@@ -175,7 +175,7 @@ class ScadeOneActions:
         return result.code, message
 
     def _args_code_gen(self, parser):
-        """Only common job arguments for the code_gen action"""
+        """Only common job arguments for the code-gen action"""
         self._job_args(parser)
 
     def action_code_gen(self, args):
