@@ -1,0 +1,10 @@
+model_check:
+  name: "Model check basic example"
+  runs-on: [self-hosted, 'ScadeOne']
+  steps:
+    - name: "Check model"
+      uses: ansys/scadeone-actions/model_check@{{ version }}
+      with:
+        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
+        job-name: 'ModelCheckQuadFlightC'

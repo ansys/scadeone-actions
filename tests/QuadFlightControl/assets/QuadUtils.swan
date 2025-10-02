@@ -40,7 +40,7 @@ inline function LimiterUnSymmetrical (lusInput: 'T;
         (#17 group)
         (#18 group)
     #pragma diagram {"xy":"H112640;V30270"} #end)
-    
+
     (#19 wire #12 => #17, #14, #7
     #pragma diagram {"wp":"#12 h13472[#17, v12800[#14, v18325 #7]]"} #end)
     (#20 wire #3 => #6, #15
@@ -102,7 +102,7 @@ inline function LimiterSymmetrical (lsInput: 'T;
     #pragma diagram {"xy":"H86334;V22935"} #end)
     (#1 expr bandOrigin
     #pragma diagram {"xy":"H33479;V33520","wh":"14000;3200"} #end)
-    
+
     (#26 wire #0 => #14, #19
     #pragma diagram {"wp":"#0 h10471[v-27610 #14, #19]"} #end)
     (#27 wire #17 => #22, #6
@@ -177,7 +177,7 @@ function RotateXY (x: float32;
         (#1033 group)
         (#1032 group)
     #pragma diagram {"xy":"H113095;V25030"} #end)
-    
+
     (#1499 wire #1497 => #1024
     #pragma diagram {"wp":"#1497 h10239 v-5455 #1024"} #end)
     (#1500 wire #1490 => #1027, #1032
@@ -220,7 +220,7 @@ node Integrator (i: 'T;
         (#7 group)
         (#8 group)
     #pragma diagram {"xy":"H-6750;V-11950"} #end)
-    
+
     (#9 wire #1 => #4)
     (#10 wire #6 => #5, #0
     #pragma diagram {"wp":"#6 h3500[v12100 h-30100 v-2600 #5, #0]"} #end)

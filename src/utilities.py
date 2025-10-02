@@ -20,12 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from pathlib import Path
-from datetime import datetime
-import platform
 import os
+import platform
+from datetime import datetime
+from pathlib import Path
+
 from ansys.scadeone.core.svc.test.test_results import TestResultsParser
-from junitparser import TestCase, TestSuite, JUnitXml, Skipped, Error
+from junitparser import Error, JUnitXml, Skipped, TestCase, TestSuite
 
 
 def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
@@ -44,12 +45,14 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
             junit_test_case: TestCase = TestCase(
                 name=tc_count,
                 classname=test_case.harness,
-                time=(datetime.strptime(test_case.end,'%Y-%m-%dT%H:%M:%S.%f')
-                      - datetime.strptime(test_case.start,'%Y-%m-%dT%H:%M:%S.%f')).total_seconds(),
+                time=(
+                    datetime.strptime(test_case.end, "%Y-%m-%dT%H:%M:%S.%f")
+                    - datetime.strptime(test_case.start, "%Y-%m-%dT%H:%M:%S.%f")
+                ).total_seconds(),
             )
-            if test_case.status == 'Failed':
+            if test_case.status == "Failed":
                 junit_test_case.add_error(Error())
-            elif test_case.status == 'Skipped':
+            elif test_case.status == "Skipped":
                 junit_test_case.add_skipped(Skipped())
             test_suite.add_testcase(junit_test_case)
             tc_count += 1
@@ -59,9 +62,9 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
         # save the JUnit XML file
         junit_file.parent.mkdir(parents=True, exist_ok=True)
         junit_xml.write(junit_file, pretty=True)
-        message = f'JUnit XML results saved to {junit_file}'
+        message = f"JUnit XML results saved to {junit_file}"
     else:
-        message = f'Error: Scade One test result file {sone_test_file} not found'
+        message = f"Error: Scade One test result file {sone_test_file} not found"
     return message
 
 
@@ -69,15 +72,18 @@ def get_windows_s_one_install_dirs() -> list[str]:
     """Get the list of Scade One installation directories."""
 
     names = []
-    if platform.system() == 'Windows':
+    if platform.system() == "Windows":
         import winreg as reg
+
         # Get Scade One installation directories from the Windows registry
         try:
-            hklm = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r'SOFTWARE\Ansys Inc')
+            hklm = reg.OpenKey(reg.HKEY_LOCAL_MACHINE, r"SOFTWARE\Ansys Inc")
             for i in range(reg.QueryInfoKey(hklm)[0]):
                 name = reg.EnumKey(hklm, i)
                 try:
-                    dir, _ = reg.QueryValueEx(reg.OpenKey(hklm, r'%s\Ansys Scade One' % name), 'Path')
+                    dir, _ = reg.QueryValueEx(
+                        reg.OpenKey(hklm, r"%s\Ansys Scade One" % name), "Path"
+                    )
                     names.append((name, dir))
                 except FileNotFoundError:
                     pass
@@ -91,7 +97,7 @@ def get_windows_s_one_install_dirs() -> list[str]:
 
 def get_scade_one_home() -> str:
     """Get the Scade One home directory from environment variable or registry."""
-    scade_one_home = os.getenv('S_ONE_HOME')
+    scade_one_home = os.getenv("S_ONE_HOME")
     if scade_one_home is None:
         # If scade_one_home is not set, try to find Scade One installation directories
         dirs = get_windows_s_one_install_dirs()

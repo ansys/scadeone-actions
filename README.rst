@@ -1,0 +1,30 @@
+Ansys Scade One Actions
+=======================
+|ansys| |CI-CD| |MIT| |doc|
+
+.. |ansys| image:: https://img.shields.io/badge/Ansys-ffc107.svg?labelColor=black&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAABDklEQVQ4jWNgoDfg5mD8vE7q/3bpVyskbW0sMRUwofHD7Dh5OBkZGBgW7/3W2tZpa2tLQEOyOzeEsfumlK2tbVpaGj4N6jIs1lpsDAwMJ278sveMY2BgCA0NFRISwqkhyQ1q/Nyd3zg4OBgYGNjZ2ePi4rB5loGBhZnhxTLJ/9ulv26Q4uVk1NXV/f///////69du4Zdg78lx//t0v+3S88rFISInD59GqIH2esIJ8G9O2/XVwhjzpw5EAam1xkkBJn/bJX+v1365hxxuCAfH9+3b9/+////48cPuNehNsS7cDEzMTAwMMzb+Q2u4dOnT2vWrMHu9ZtzxP9vl/69RVpCkBlZ3N7enoDXBwEAAA+YYitOilMVAAAAAElFTkSuQmCC
+   :target: https://actions.scade.docs.pyansys.com/
+   :alt: Ansys
+
+.. |CI-CD| image:: https://github.com/ansys/scadeone-actions/actions/workflows/ci_cd.yml/badge.svg
+   :target: https://github.com/ansys/scadeone-actions/actions/workflows/ci_cd.yml
+   :alt: CI-CD
+
+.. |MIT| image:: https://img.shields.io/badge/License-MIT-blue.svg
+   :target: https://opensource.org/blog/license/mit
+   :alt: MIT
+
+.. |doc| image:: https://img.shields.io/badge/docs-scadeone--actions-green.svg?style=flat
+   :target: https://actions.scadeone.docs.pyansys.com
+   :alt: Doc
+
+.. readme_common_begins
+
+Ansys Scade One Actions contains a collection of `GitHub Actions
+<https://docs.github.com/en/actions>`_ that projects in the Ansys
+Scade One ecosystem can use.
+
+.. readme_common_ends
+
+For more information on available actions and how to use them, see the
+`Ansys Scade One Actions documentation <https://actions.scadeone.docs.pyansys.com>`_ .

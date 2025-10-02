@@ -31,7 +31,7 @@ _harness TestVerticalAccel
     #pragma diagram {"xy":"H187498;V-41650","wh":"26000;7000"} #end)
     (#7 block (_oracle SimVerticalAccelOracle)
     #pragma diagram {"xy":"H221148;V-41650","wh":"12000;14000"} #end)
-    
+
     (#2 wire #0 => #1 .(desiredVerticalAccel)
     #pragma diagram {"wp":"v0|#0 #1"} #end)
     (#5 wire #3 => #4)
@@ -80,7 +80,7 @@ _harness TestRightRoll
                #pragma diagram {"xy":"H-52073;V18876","wh":"13645;10638"} #end)
     (#19 group
     #pragma diagram {"xy":"H35304;V12478","wh":"800;14000"} #end)
-    (assert $TestStable: #30 ; 
+    (assert $TestStable: #30 ;
       where
         (#30 group)
     #pragma diagram {"xy":"H99774;V12478"} #end)
@@ -90,7 +90,7 @@ _harness TestRightRoll
     #pragma diagram {"xy":"H35304;V-5224","wh":"800;14000"} #end)
     (#34 expr _current_cycle > 3 and _current_cycle < 10
     #pragma diagram {"xy":"H43882;V-17749","wh":"44000;3200"} #end)
-    (assert $TestTransient: #39 ; 
+    (assert $TestTransient: #39 ;
       where
         (#39 group)
     #pragma diagram {"xy":"H99774;V-5224"} #end)
@@ -99,7 +99,7 @@ _harness TestRightRoll
         (#36 group)
         (#37 group)
     #pragma diagram {"xy":"H54132;V-4495"} #end)
-    
+
     (#8 wire #2 => #5 .(yaw))
     (#9 wire #3 => #5 .(pitch))
     (#24 wire #14 => #5 .(roll)
@@ -133,7 +133,7 @@ _harness TestRightRoll
 }
 
 const ZERO_ATTITUDE = {
-  pitch: 0.0, 
-  roll: 0.0, 
+  pitch: 0.0,
+  roll: 0.0,
   yaw: 0.0
 }: T::AttitudeType;
