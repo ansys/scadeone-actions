@@ -24,14 +24,14 @@ name: |
   Scade One model check
 
 description: |
-  Run a Scade One Actions workflow for model checking
+  The ``model-check`` action runs a check in a Scade One project for a given job.
 
 inputs:
 
   scade-dir:
     description: |
       Scade One installation directory, e.g.
-      'C:\Program Files\Ansys Inc\v252\Scade One' or '/opt/AnsysInc/v252/ScadeOne/'.
+      ``'C:\Program Files\Ansys Inc\v252\Scade One'`` or ``'/opt/AnsysInc/v252/ScadeOne/'``.
     required: true
     type: string
 
@@ -53,7 +53,7 @@ inputs:
   model-check-report:
     description: |
       Path to the model check report file. If not provided, the report will be
-      saved in the 'output' directory with the name 'model_check_report.txt'.
+      saved in the 'output' directory with the name ``'model_check_report.txt'``.
     required: false
     default: 'output/model_check_report.txt'
     type: string

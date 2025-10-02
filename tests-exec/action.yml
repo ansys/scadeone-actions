@@ -21,17 +21,17 @@
 # SOFTWARE.
 
 name: |
-  Scade One model check
+  Scade One tests execution
 
 description: |
-  Run a Scade One Actions workflow for execution of model tests
+  The ``tests-exec`` action executes tests on a Scade One project for a given job
 
 inputs:
 
   scade-dir:
     description: |
       Scade One installation directory, e.g.
-      'C:\Program Files\Ansys Inc\v252\Scade One' or '/opt/AnsysInc/v252/ScadeOne/'.
+      ``'C:\Program Files\Ansys Inc\v252\Scade One'`` or ``'/opt/AnsysInc/v252/ScadeOne/'``.
     required: true
     type: string
 
@@ -53,7 +53,7 @@ inputs:
   tests-exec-report:
     description: |
       Path to the model tests exec report file. If not provided, the report will be
-      saved in the 'output' directory with the name 'tests_exec_report.txt'.
+      saved in the 'output' directory with the name ``'tests_exec_report.txt'``.
     required: false
     default: 'output/tests_exec_report.xml'
     type: string

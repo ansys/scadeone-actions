@@ -24,14 +24,14 @@ name: |
   Scade One code generation
 
 description: |
-  Run a Scade One Actions workflow for model code generation
+  The ``code-gen`` action generates code for a Scade One project for a given job.
 
 inputs:
 
   scade-dir:
     description: |
       Scade One installation directory, e.g.
-      'C:\Program Files\Ansys Inc\v252\Scade One' or '/opt/AnsysInc/v252/ScadeOne/'.
+      ``'C:\Program Files\Ansys Inc\v252\Scade One'`` or ``'/opt/AnsysInc/v252/ScadeOne/'``.
     required: true
     type: string
 
@@ -53,7 +53,7 @@ inputs:
   target-dir:
     description: |
       Path to the generated code, log and mapping files. If not provided, they will be
-      saved in the 'output/code_gen' directory.
+      saved in the ``'output/code_gen'`` directory.
     required: false
     default: 'output/code_gen'
     type: string
