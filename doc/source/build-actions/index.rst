@@ -6,7 +6,7 @@ Execute Scade One model build actions.
 Code generation
 ---------------
 
-.. jinja:: code_gen
+.. jinja:: code-gen
 
     {{ description }}
 
@@ -30,7 +30,7 @@ Code generation
 Model check
 -----------
 
-.. jinja:: model_check
+.. jinja:: model-check
 
     {{ description }}
 

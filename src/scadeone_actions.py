@@ -154,7 +154,7 @@ class ScadeOneActions:
             return None, f"Error: Scade One project {args.project} doesn't exist"
 
     def _args_model_check(self, parser):
-        """Add arguments for the model_check action"""
+        """Add arguments for the model-check action"""
         self._job_args(parser)
 
     def action_model_check(self, args):
@@ -175,7 +175,7 @@ class ScadeOneActions:
         return result.code, message
 
     def _args_code_gen(self, parser):
-        """Only common job arguments for the code_gen action"""
+        """Only common job arguments for the code-gen action"""
         self._job_args(parser)
 
     def action_code_gen(self, args):

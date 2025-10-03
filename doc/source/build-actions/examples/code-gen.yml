@@ -1,9 +1,9 @@
-code_gen:
+code-gen:
   name: "Code generation basic example"
   runs-on: [self-hosted, 'ScadeOne']
   steps:
     - name: "Generate code"
-      uses: ansys/scadeone-actions/code_gen@{{ version }}
+      uses: ansys/scadeone-actions/code-gen@{{ version }}
       with:
         scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
         project: 'Model\QuadFlightControl\QuadFlightControl.sproj'

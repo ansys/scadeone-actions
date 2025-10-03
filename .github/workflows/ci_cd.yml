@@ -137,18 +137,18 @@ jobs:
 
 
 
-  setup:
+
+
+  model-check:
+    name: "Model Check"
     runs-on: [self-hosted, 'ScadeOne']
+    # needs: setup
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-  model_check:
-    runs-on: [self-hosted, 'ScadeOne']
-    needs: setup
-    steps:
       - name: Run model check action
-        uses: ./model_check
+        uses: ./model-check
         with:
             scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
             project: ${{ env.PROJECT }}
@@ -157,28 +157,34 @@ jobs:
 
 
 
-  tests_exec:
+  tests-exec:
+    name: "Test Execution"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: model_check
+    needs: model-check
     strategy:
       matrix:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
       - name: Run model tests execution
-        uses: ./tests_exec
+        uses: ./tests-exec
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
           python-version: '3.11'
 
-  code_gen:
+  code-gen:
+    name: "Code Generation"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: tests_exec
+    needs: tests-exec
     steps:
+      - name: Checkout
+        uses: actions/checkout@v5
       - name: Run model code generation
-        uses: ./code_gen
+        uses: ./code-gen
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
@@ -188,7 +194,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [code_gen]
+    needs: [code-gen]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
