@@ -58,13 +58,6 @@ inputs:
     default: 'output/tests_exec_report.xml'
     type: string
 
-  artifact-name:
-    description: |
-      Name of the artifact to upload.
-    required: false
-    default: 'Tests exec report'
-    type: string
-
   python-version:
     description: |
       Python version used for installing and execution of the build process.
@@ -130,6 +123,6 @@ runs:
       uses: dorny/test-reporter@v2
       if: (!cancelled())
       with:
-        name: ${{inputs.artifact-name }}
+        name: Tests exec report
         path: ${{ inputs.tests-exec-report }}
         reporter: jest-junit
