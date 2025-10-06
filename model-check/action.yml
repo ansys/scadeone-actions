@@ -58,6 +58,13 @@ inputs:
     default: 'output/model_check_report.txt'
     type: string
 
+  artifact-name:
+    description: |
+      Name of the artifact to upload.
+    required: false
+    default: 'Model check report'
+    type: string
+
   python-version:
     description: |
       Python version used for installing and execution of the build process.
@@ -73,6 +80,11 @@ inputs:
     default: pip
     type: string
 
+  checkout:
+    description: >
+      Whether to clone the repository on the CI/CD machine.
+    default: 'true'
+    required: false
 
 runs:
   using: "composite"
@@ -84,6 +96,7 @@ runs:
   steps:
     - name: "Install Git and clone project"
       uses: actions/checkout@v5
+      if: ${{ inputs.checkout == 'true' }}
 
     - name: "Set up Python"
       uses: actions/setup-python@v6
@@ -116,7 +129,7 @@ runs:
     - name: "Upload model check report"
       uses: actions/upload-artifact@v4
       with:
-        name: Model check report
+        name: ${{inputs.artifact-name }}
         path: ${{ inputs.model-check-report }}
         if-no-files-found: error
         retention-days: 7

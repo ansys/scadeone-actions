@@ -73,6 +73,11 @@ inputs:
     default: pip
     type: string
 
+  checkout:
+    description: >
+      Whether to clone the repository on the CI/CD machine.
+    default: 'true'
+    required: false
 
 runs:
   using: "composite"
@@ -84,6 +89,7 @@ runs:
   steps:
     - name: "Install Git and clone project"
       uses: actions/checkout@v5
+      if: ${{ inputs.checkout == 'true' }}
 
     - name: "Set up Python"
       uses: actions/setup-python@v6
