@@ -79,8 +79,9 @@ inputs:
     required: false
     default: pip
     type: string
+
   checkout:
-    description: >
+    description: |
       Whether to clone the repository on the CI/CD machine.
     default: 'true'
     required: false
