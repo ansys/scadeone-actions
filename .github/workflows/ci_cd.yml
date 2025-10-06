@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  MAIN_PYTHON_VERSION: '3.10'
+  MAIN_PYTHON_VERSION: '3.11'
   DOCUMENTATION_CNAME: 'actions.scadeone.docs.pyansys.com'
   test-library-name: 'ansys-scadeone-actions'
   SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
@@ -144,16 +144,13 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne']
     # needs: setup
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
       - name: Run model check action
         uses: ./model-check
         with:
             scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
             project: ${{ env.PROJECT }}
             job-name: ${{ env.JOB_MODEL_CHECK }}
-            python-version: '3.11'
+            python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
 
@@ -166,30 +163,26 @@ jobs:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
       - name: Run model tests execution
         uses: ./tests-exec
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
-          python-version: '3.11'
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   code-gen:
     name: "Code Generation"
     runs-on: [self-hosted, 'ScadeOne']
     needs: tests-exec
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
       - name: Run model code generation
         uses: ./code-gen
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
-          python-version: '3.11'
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
   tests:
