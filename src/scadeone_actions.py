@@ -39,9 +39,9 @@ Scade One Python actions
 
 This module provides actions to interact with Scade One tools to be run in an automated environment like a CI/CD pipeline.
 prerequisites:
-- uses the Scade One install path defined in S_ONE_HOME environment variable if set
+- uses the Scade One install path defined in SCADE_ONE_HOME environment variable if set
   or uses the Scade One installation directories passed as an argument
-  if S_ONE_HOME or the parameter are not set, it will try to find Scade One installation directories in the Windows registry and use the most recent one
+  if SCADE_ONE_HOME or the parameter are not set, it will try to find Scade One installation directories in the Windows registry and use the most recent one
 - The Scade One Python API (pyscadeone) must be installed and available in the Python environment
 """
 
@@ -72,7 +72,7 @@ class ScadeOneActions:
         if scade_one_home is None:
             if strict:
                 raise FileNotFoundError(
-                    "Scade One home directory not found. Set S_ONE_HOME environment variable or pass the path as an argument."
+                    "Scade One home directory not found. Set SCADE_ONE_HOME environment variable or pass the path as an argument."
                 )
         else:
             # Check if the Scade One home directory exists

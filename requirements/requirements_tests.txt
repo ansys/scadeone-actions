@@ -1,4 +1,5 @@
-ansys.scade.apitools
+# ansys.scadeone.core
+junitparser==3.2.0
 # something wrong with test discovery with pytest 8.1.0 and above
 pytest==8.4.2
 pytest-cov==7.0.0
