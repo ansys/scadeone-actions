@@ -186,11 +186,7 @@ jobs:
 
   unit-tests:
     name: "Run Python unit tests"
-    runs-on: [self-hosted, 'SCADE']
-    strategy:
-      matrix:
-        scade-version: ['26.1']
-      fail-fast: false
+    runs-on: [self-hosted, 'ScadeOne']
     steps:
       - name: "Install Git and clone project"
         uses: actions/checkout@v5
