@@ -21,16 +21,44 @@
 # SOFTWARE.
 
 import sys
+import pytest
 from pathlib import Path
 
 # add the path containing utilities.py
 script_dir = Path(__file__).parent
 sys.path.append(str(script_dir.parent.parent / "src"))
 
+@pytest.mark.parametrize(
+    "scade_one_dir",
+    [
+        "/opt/AnsysInc/v261/ScadeOne/",
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+    ],
+)
 
-def test_get_scade_one_home_nominal():
+def test_prefers_env_variable(monkeypatch, scade_one_dir):
     import utilities
+    # If the environment variable is set, it must take precedence.
+    monkeypatch.setenv("SCADE_ONE_HOME", scade_one_dir)
+    assert utilities.get_scade_one_home() == scade_one_dir  
 
-    # Get the Scade One home directory from environment variable or registry
-    scade_one_home = utilities.get_scade_one_home()
-    assert scade_one_home is not None
+
+def test_fallback_to_latest_install_dir(monkeypatch):
+    import utilities
+    # If the env var is not set, fall back to the latest directory
+    # returned by the helper (assumed to be the last element).
+    monkeypatch.delenv("SCADE_ONE_HOME", raising=False)
+    monkeypatch.setattr(
+        utilities, "get_windows_s_one_install_dirs",
+        lambda: ["C:/Program Files/ANSYS Inc/v252/Scade One", "C:/Program Files/ANSYS Inc/v261/Scade One"],
+    )
+    assert utilities.get_scade_one_home() == "C:/Program Files/ANSYS Inc/v261/Scade One"  
+
+
+def test_returns_none_when_not_found(monkeypatch):
+    import utilities
+    # If neither the env var nor any install directory is available, return None.
+    monkeypatch.delenv("SCADE_ONE_HOME", raising=False)
+    monkeypatch.setattr(utilities, "get_windows_s_one_install_dirs", lambda: [])
+    assert utilities.get_scade_one_home() is None  
+
