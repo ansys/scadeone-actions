@@ -1,4 +1,4 @@
-# Copyright (C) 2025 ANSYS, Inc. and/or its affiliates.
+# Copyright (C) 2024 - 2025 ANSYS, Inc. and/or its affiliates.
 # SPDX-License-Identifier: MIT
 #
 #
@@ -21,7 +21,6 @@
 # SOFTWARE.
 
 
-import pytest
 import sys
 from pathlib import Path
 
@@ -33,9 +32,9 @@ script_dir = Path(__file__).parent
 sys.path.append(str(script_dir.parent.parent / "src"))
 
 
-
 def test_get_scade_one_home_nominal():
     import utilities
+
     # Get the Scade One home directory from environment variable or registry
     scade_one_home = utilities.get_scade_one_home()
-    assert scade_one_home != None
+    assert scade_one_home is not None
