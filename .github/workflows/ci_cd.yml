@@ -205,7 +205,7 @@ jobs:
       - name: "Executing test suite"
         shell: bash
         run: |
-          :: Run tests
+          # Run tests
           python -m pytest --ignore=tests/QuadFlightControl --basetemp=tmp
 
       # - name: "Upload coverage reports to Codecov"

@@ -24,9 +24,6 @@
 import sys
 from pathlib import Path
 
-# -*- coding: utf-8 -*-
-
-
 # add the path containing utilities.py
 script_dir = Path(__file__).parent
 sys.path.append(str(script_dir.parent.parent / "src"))
