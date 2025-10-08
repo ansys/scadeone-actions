@@ -50,7 +50,7 @@ def test_fallback_to_latest_install_dir(monkeypatch):
     monkeypatch.delenv("SCADE_ONE_HOME", raising=False)
     monkeypatch.setattr(
         utilities,
-        "get_windows_s_one_install_dirs",
+        "get_windows_scade_one_install_dirs",
         lambda: [
             "C:/Program Files/ANSYS Inc/v252/Scade One",
             "C:/Program Files/ANSYS Inc/v261/Scade One",
@@ -64,5 +64,5 @@ def test_returns_none_when_not_found(monkeypatch):
 
     # If neither the env var nor any install directory is available, return None.
     monkeypatch.delenv("SCADE_ONE_HOME", raising=False)
-    monkeypatch.setattr(utilities, "get_windows_s_one_install_dirs", lambda: [])
+    monkeypatch.setattr(utilities, "get_windows_scade_one_install_dirs", lambda: [])
     assert utilities.get_scade_one_home() is None
