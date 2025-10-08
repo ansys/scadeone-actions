@@ -206,7 +206,7 @@ jobs:
         shell: bash
         run: |
           # Run tests
-          python -m pytest --ignore=tests/QuadFlightControl --basetemp=tmp
+          python -m pytest --basetemp=tmp
 
       # - name: "Upload coverage reports to Codecov"
       #   uses: codecov/codecov-action@v4
