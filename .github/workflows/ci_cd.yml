@@ -184,10 +184,40 @@ jobs:
           job-name: ${{ env.JOB_CODE_GEN }}
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
+  unit-tests:
+    name: "Run Python unit tests"
+    runs-on: [self-hosted, 'ScadeOne']
+    steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+
+      - name: "Install dependencies"
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/requirements_tests.txt --find-links "${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}/pyscadeone"
+
+      - name: "Executing test suite"
+        shell: bash
+        run: |
+          # Run tests
+          python -m pytest --basetemp=tmp
+
+      # - name: "Upload coverage reports to Codecov"
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     slug: ansys/scade-actions
+      #     files: .cov/xml
 
   tests:
     name: "All Tests"
-    needs: [code-gen]
+    needs: [code-gen, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"

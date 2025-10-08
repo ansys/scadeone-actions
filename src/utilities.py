@@ -97,7 +97,7 @@ def get_windows_s_one_install_dirs() -> list[str]:
 
 def get_scade_one_home() -> str:
     """Get the Scade One home directory from environment variable or registry."""
-    scade_one_home = os.getenv("S_ONE_HOME")
+    scade_one_home = os.getenv("SCADE_ONE_HOME")
     if scade_one_home is None:
         # If scade_one_home is not set, try to find Scade One installation directories
         dirs = get_windows_s_one_install_dirs()
