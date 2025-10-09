@@ -1,0 +1,52 @@
+-- version swan: 2025.2 graph: 2.1 swant: 1.1
+use module0;
+
+_harness harness1_operator0
+{
+  diagram
+    (#0 block (_source operator0_inputs)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle operator0_outputs)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator0
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+}
+
+_harness harness1_operator1
+{
+  diagram
+    (#0 block (_source operator1_inputs)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle operator1_outputs)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator1
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    (assert $CompLessFive: #6 ; 
+      where
+        (#6 group)
+    #pragma diagram {"xy":"H73975;V13325"} #end)
+    (#7 expr #8 < #9
+      where
+        (#8 group)
+        (#9 group)
+    #pragma diagram {"xy":"H58100;V13325"} #end)
+    (#10 expr 5_i32
+    #pragma diagram {"xy":"H34025;V19325","wh":"10000;3200"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+    (#11 wire #7 => #6)
+    (#12 wire #2 .(o0) => #8
+    #pragma diagram {"wp":"v5250|#2 h4050 v6175 #8"} #end)
+    (#13 wire #10 => #9
+    #pragma diagram {"wp":"#10 h6487 v-4100 #9"} #end)
+}

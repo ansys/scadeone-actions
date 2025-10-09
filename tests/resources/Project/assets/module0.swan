@@ -1,0 +1,66 @@
+-- version swan: 2025.2 graph: 2.1
+function operator0 (i0: int32;
+                    i1: int32;)
+  returns (o0: int32;
+           o1: int32;)
+{
+  diagram
+    (#0 expr i0
+    #pragma diagram {"xy":"H17175;V18000"} #end)
+    (#1 expr i1
+    #pragma diagram {"xy":"H17175;V29300"} #end)
+    (#2 expr #3 + #4
+      where
+        (#3 group)
+        (#4 group)
+    #pragma diagram {"xy":"H38175;V27400"} #end)
+    (#5 def o0
+    #pragma diagram {"xy":"H59175;V27400"} #end)
+    (#6 def o1
+    #pragma diagram {"xy":"H59175;V19900"} #end)
+    (#7 expr #8 - #9
+      where
+        (#8 group)
+        (#9 group)
+    #pragma diagram {"xy":"H38175;V19900"} #end)
+    
+    (#10 wire #0 => #3, #8
+    #pragma diagram {"wp":"#0 h9500[v7500 #3, #8]"} #end)
+    (#11 wire #1 => #4, #9
+    #pragma diagram {"wp":"#1 h5500[#4, v-7500 #9]"} #end)
+    (#12 wire #2 => #5)
+    (#13 wire #7 => #6)
+}
+
+function operator1 (i0: int32;
+                    i1: int32;)
+  returns (o0: int32;
+           o1: int32;)
+{
+  diagram
+    (#0 expr i0
+    #pragma diagram {"xy":"H17175;V18000"} #end)
+    (#1 expr i1
+    #pragma diagram {"xy":"H17175;V29300"} #end)
+    (#2 expr #3 + #4
+      where
+        (#3 group)
+        (#4 group)
+    #pragma diagram {"xy":"H38175;V27400"} #end)
+    (#5 def o0
+    #pragma diagram {"xy":"H59175;V27400"} #end)
+    (#6 def o1
+    #pragma diagram {"xy":"H59175;V19900"} #end)
+    (#7 expr #8 - #9
+      where
+        (#8 group)
+        (#9 group)
+    #pragma diagram {"xy":"H38175;V19900"} #end)
+    
+    (#10 wire #0 => #3, #8
+    #pragma diagram {"wp":"#0 h9500[v7500 #3, #8]"} #end)
+    (#11 wire #1 => #4, #9
+    #pragma diagram {"wp":"#1 h5500[#4, v-7500 #9]"} #end)
+    (#12 wire #2 => #5)
+    (#13 wire #7 => #6)
+}

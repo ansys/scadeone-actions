@@ -1,0 +1,27 @@
+{
+  "Version": "1.0",
+  "Name": "Project",
+  "Dependencies": [],
+  "Resources": [
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\operator0_inputs.sd",
+      "Key": "operator0_inputs"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\operator0_outputs.sd",
+      "Key": "operator0_outputs"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\operator1_inputs.sd",
+      "Key": "operator1_inputs"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\operator1_outputs.sd",
+      "Key": "operator1_outputs"
+    }
+  ]
+}
