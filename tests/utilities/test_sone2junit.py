@@ -138,7 +138,7 @@ def test_writes_junit_and_maps_status_with_durations(
             harness="QuadTest::TestExeVerticalAccem",
             start="2025-10-07T15:47:58.713",
             end="2025-10-07T15:47:58.713",
-            status="skipped",
+            status="error",
         ),
     ]
     monkeypatch.setattr(
