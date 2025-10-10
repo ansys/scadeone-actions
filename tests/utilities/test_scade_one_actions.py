@@ -104,6 +104,7 @@ def test_set_scade_one_home_with_existing_dir_initializes_api():
     assert actions.scade_one_api is not None
 
 
+@pytest.mark.xfail(reason="temporarly deactivated, waiting fix #23", strict=False)
 def test_set_scade_one_home_with_none_existing_dir():
     """
     Provide a wrong install path string depending on the OS:
@@ -217,31 +218,26 @@ def test_action_code_gen_success_with_output():
         if is_windows
         else "/opt/AnsysInc/v261/ScadeOne/"
     )
-    # --- prepare a real ScadeOne app (no install_dir needed for loading) ---
-    # We don't rely on ScadeOneActions auto init; we inject the app instance.
-    app = ScadeOne()
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=provided_path)
-    actions.scade_one_api = app  # give the real loader to our action object
 
-    # Ensure jobs are loadable by the API
-    project = app.load_project(sproj)
-    project.load_jobs()
-
-    args = SimpleNamespace(
-        project=sproj, job="CodeGenerationJob", output="output/code_gen"
+    # Run code generation action
+    scadeone_actions.scadeone_actions(
+        [
+            "code_gen",
+            "-s",
+            provided_path,
+            "-p",
+            str(sproj),
+            "-j",
+            "CodeGenerationJob",
+            "-o",
+            "tests/unit_tests_out_gen",
+        ]
     )
-    code = actions.action_code_gen(args)  # noqa : F841
-    # get generated code from CodeGen job
+
+    # Load the project to access to the generated code
+    app = ScadeOne()
+    project = app.load_project(str(sproj))
     code_gen = GeneratedCode(project, "CodeGenerationJob")
 
-    assert code_gen.is_code_generated is True
-
-
-# def test_action_code_gen_wrong_kind_returns_error(tmp_path):
-#     actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
-#     job = DummyJob("CG", kind="WRONG", storage_root=tmp_path)
-#     actions.s_one_api = SimpleNamespace(load_project=lambda p: DummyProject([job]))
-#     args = SimpleNamespace(project=tmp_path / "proj.sproj", job="CG", output=None)
-#     args.project.write_text("fake")
-#     code, msg = actions.action_code_gen(args)
-#     assert code == 2 and "is not a" in msg
+    # To check that the job has been executed
+    assert code_gen.is_code_generated

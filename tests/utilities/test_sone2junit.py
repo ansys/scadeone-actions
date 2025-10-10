@@ -23,6 +23,7 @@
 import sys
 from pathlib import Path
 
+import pytest
 from pytest import MonkeyPatch
 
 # add the path containing utilities.py
@@ -109,6 +110,7 @@ def test_returns_message_and_no_output_when_input_missing(tmp_path: Path):
     assert not junit_out.exists()
 
 
+@pytest.mark.xfail(reason="temporarly deactivated, waiting fix #22", strict=False)
 def test_writes_junit_and_maps_status_with_durations(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):

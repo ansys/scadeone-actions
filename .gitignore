@@ -167,3 +167,4 @@ cython_debug/
 *-rendered-example.yml
 /TestResults/
 tmp/
+tests/unit_tests_out_gen
