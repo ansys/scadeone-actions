@@ -3,9 +3,9 @@
   "Kind": "TestExecution",
   "Properties": {
     "RootDeclarations": [
-      "testModule::harness1_operator1"
+      "testModule::harness1_operator0"
     ],
-    "Name": "TestExecutionJob2",
+    "Name": "TestExecutionJob0",
     "CustomArguments": "",
     "TestResultFile": "testResults.json"
   },

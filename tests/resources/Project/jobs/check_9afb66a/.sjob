@@ -3,7 +3,7 @@
   "Kind": "ModelCheck",
   "Properties": {
     "RootDeclarations": [
-      "module0::operator0"
+      "module0::operator1"
     ],
     "Name": "ModelCheckJob",
     "CustomArguments": ""

@@ -12,11 +12,12 @@
     "ExpansionNoExp": "",
     "ShortCircuitOperators": "False",
     "NameLength": "200",
-    "SignificanceLength": "200",
+    "SignificanceLength": "31",
     "KeepAssume": "False",
     "GlobalsPrefix": "",
     "UseMacros": "False",
-    "StaticLocals": "False"
+    "StaticLocals": "False",
+    "Probes": "False"
   },
   "InputPaths": [
     "assets/module0.swan"

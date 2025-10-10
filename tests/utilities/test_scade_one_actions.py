@@ -174,7 +174,7 @@ def test_get_job_type_with_real_project_not_found_wrong_kind_and_ok(monkeypatch)
     actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
     actions.scade_one_api = app  # give the real loader to our action object
 
-    # Ensure jobs are loadable by the API (sanity check outside the SUT)
+    # Ensure jobs are loadable by the API
     project = app.load_project(sproj)
     project.load_jobs()
 
@@ -200,3 +200,48 @@ def test_get_job_type_with_real_project_not_found_wrong_kind_and_ok(monkeypatch)
     args = SimpleNamespace(project=sproj, job="TestExecutionJob1")
     job, msg = actions._get_job_type(args, JobType.TEST_EXECUTION)
     assert job is not None and "found in project" in msg
+
+
+# -------------------------------- action_code_gen -----------------------------
+
+
+def test_action_code_gen_success_with_output():
+    from ansys.scadeone.core.svc.generated_code import GeneratedCode
+
+    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+    if not sproj.is_file():
+        pytest.skip(f"Project file not found at {sproj}")
+    is_windows = platform.system() == "Windows"
+    provided_path = (
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+        if is_windows
+        else "/opt/AnsysInc/v261/ScadeOne/"
+    )
+    # --- prepare a real ScadeOne app (no install_dir needed for loading) ---
+    # We don't rely on ScadeOneActions auto init; we inject the app instance.
+    app = ScadeOne()
+    actions = scadeone_actions.ScadeOneActions(scade_one_home=provided_path)
+    actions.scade_one_api = app  # give the real loader to our action object
+
+    # Ensure jobs are loadable by the API
+    project = app.load_project(sproj)
+    project.load_jobs()
+
+    args = SimpleNamespace(
+        project=sproj, job="CodeGenerationJob", output="output/code_gen"
+    )
+    code = actions.action_code_gen(args)  # noqa : F841
+    # get generated code from CodeGen job
+    code_gen = GeneratedCode(project, "CodeGenerationJob")
+
+    assert code_gen.is_code_generated is True
+
+
+# def test_action_code_gen_wrong_kind_returns_error(tmp_path):
+#     actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
+#     job = DummyJob("CG", kind="WRONG", storage_root=tmp_path)
+#     actions.s_one_api = SimpleNamespace(load_project=lambda p: DummyProject([job]))
+#     args = SimpleNamespace(project=tmp_path / "proj.sproj", job="CG", output=None)
+#     args.project.write_text("fake")
+#     code, msg = actions.action_code_gen(args)
+#     assert code == 2 and "is not a" in msg
