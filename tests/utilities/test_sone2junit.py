@@ -111,9 +111,7 @@ def test_returns_message_and_no_output_when_input_missing(tmp_path: Path):
 
 
 @pytest.mark.xfail(reason="temporarly deactivated, waiting fix #22", strict=False)
-def test_writes_junit_and_maps_status_with_durations(
-    monkeypatch: MonkeyPatch, tmp_path: Path
-):
+def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
     import utilities
 
     """Happy path: parses 3 cases (Pass/Fail/Skip), maps to JUnit, and writes a file."""
@@ -170,10 +168,6 @@ def test_writes_junit_and_maps_status_with_durations(
     assert len(suite.testcases) == 3
 
     tc0, tc1, tc2 = suite.testcases
-    # Durations computed from (end - start)
-    # assert abs(tc0.time - 1.5) < 1e-9
-    # assert abs(tc1.time - 1.0) < 1e-9
-    # assert abs(tc2.time - 1.25) < 1e-9
 
     # Status mapping: Failed -> error, Skipped -> skipped
     assert tc1._error is True

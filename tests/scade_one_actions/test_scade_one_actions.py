@@ -220,7 +220,7 @@ def test_action_code_gen_success_with_output():
     )
 
     # Run code generation action
-    scadeone_actions.scadeone_actions(
+    actions = scadeone_actions.scadeone_actions(
         [
             "code_gen",
             "-s",
@@ -240,4 +240,152 @@ def test_action_code_gen_success_with_output():
     code_gen = GeneratedCode(project, "CodeGenerationJob")
 
     # To check that the job has been executed
-    assert code_gen.is_code_generated
+    assert code_gen.is_code_generated and actions == 0
+
+
+def test_action_code_gen_wrong_kind_returns_error():
+    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+    if not sproj.is_file():
+        pytest.skip(f"Project file not found at {sproj}")
+    is_windows = platform.system() == "Windows"
+    provided_path = (
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+        if is_windows
+        else "/opt/AnsysInc/v261/ScadeOne/"
+    )
+
+    # Run code generation action
+    actions = scadeone_actions.scadeone_actions(
+        [
+            "code_gen",
+            "-s",
+            provided_path,
+            "-p",
+            str(sproj),
+            "-j",
+            "ModelCheckJob",
+            "-o",
+            "tests/unit_tests_out_gen",
+        ]
+    )
+
+    assert actions == 2
+
+    # ------------------------------- action_tests_exec ----------------------------
+
+
+def test_action_tests_exec_success():
+    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+    if not sproj.is_file():
+        pytest.skip(f"Project file not found at {sproj}")
+    is_windows = platform.system() == "Windows"
+    provided_path = (
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+        if is_windows
+        else "/opt/AnsysInc/v261/ScadeOne/"
+    )
+
+    # Run tests execution action
+    actions = scadeone_actions.scadeone_actions(
+        [
+            "tests_exec",
+            "-s",
+            provided_path,
+            "-p",
+            str(sproj),
+            "-j",
+            "TestExecutionJob1",
+            "--junit",
+            "tests/unit_tests_out_gen/tests_exec_report.xml",
+        ]
+    )
+
+    assert actions == 0
+
+
+def test_action_tests_exec_job_not_found():
+    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+    if not sproj.is_file():
+        pytest.skip(f"Project file not found at {sproj}")
+    is_windows = platform.system() == "Windows"
+    provided_path = (
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+        if is_windows
+        else "/opt/AnsysInc/v261/ScadeOne/"
+    )
+
+    # Run tests execution action
+    actions = scadeone_actions.scadeone_actions(
+        [
+            "tests_exec",
+            "-s",
+            provided_path,
+            "-p",
+            str(sproj),
+            "-j",
+            "TestExecutionJob51",
+            "--junit",
+            "tests/unit_tests_out_gen/tests_exec_report.xml",
+        ]
+    )
+
+    assert actions == 2
+
+
+# ------------------------------- action_model_check ---------------------------
+def test_action_model_check_success():
+    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+    if not sproj.is_file():
+        pytest.skip(f"Project file not found at {sproj}")
+    is_windows = platform.system() == "Windows"
+    provided_path = (
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+        if is_windows
+        else "/opt/AnsysInc/v261/ScadeOne/"
+    )
+
+    # Run tests execution action
+    actions = scadeone_actions.scadeone_actions(
+        [
+            "model_check",
+            "-s",
+            provided_path,
+            "-p",
+            str(sproj),
+            "-j",
+            "ModelCheckJob",
+            "-o",
+            "tests/unit_tests_out_gen/model_check_report.txt",
+        ]
+    )
+
+    assert actions == 0
+
+
+def test_action_model_check_job_not_found():
+    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+    if not sproj.is_file():
+        pytest.skip(f"Project file not found at {sproj}")
+    is_windows = platform.system() == "Windows"
+    provided_path = (
+        "C:/Program Files/ANSYS Inc/v261/Scade One"
+        if is_windows
+        else "/opt/AnsysInc/v261/ScadeOne/"
+    )
+
+    # Run tests execution action
+    actions = scadeone_actions.scadeone_actions(
+        [
+            "model_check",
+            "-s",
+            provided_path,
+            "-p",
+            str(sproj),
+            "-j",
+            "ModelCheckJob13",
+            "-o",
+            "tests/unit_tests_out_gen/model_check_report.txt",
+        ]
+    )
+
+    assert actions == 2
