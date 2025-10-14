@@ -83,18 +83,26 @@ class DummyJob:
 # --------------------------- set_scade_one_home ------------------------------
 
 
-def test_set_scade_one_home_strict_false_allows_missing_env(monkeypatch):
-    # get_scade_one_home() returns None -> strict=False should not raise, scade_one_api stays None
-    monkeypatch.setattr(scadeone_actions, "get_scade_one_home", lambda: None)
+def test_scade_one_home_none_get_scade_one_home_none(monkeypatch):
+    """When no path is provided and discovery returns None, raise FileNotFoundError."""
     actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
-    assert actions.scade_one_api is None  # no init performed
+    monkeypatch.setattr(scadeone_actions, "get_scade_one_home", lambda: None)
+
+    with pytest.raises(FileNotFoundError) as ei:
+        actions.set_scade_one_home(scade_one_home=None)
+    assert "Scade One home directory not found" in str(ei.value)
 
 
-def test_set_scade_one_home_strict_true_raises_when_missing(monkeypatch):
-    monkeypatch.setattr(scadeone_actions, "get_scade_one_home", lambda: None)
+def test_scade_one_home_none_and_nonexistent_dir(monkeypatch, tmp_path):
+    """When discovery returns a non-existent directory, raise FileNotFoundError."""
     actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
-    with pytest.raises(FileNotFoundError):
-        actions.set_scade_one_home(None, strict=True)
+    missing = tmp_path / "does_not_exist"
+
+    monkeypatch.setattr(scadeone_actions, "get_scade_one_home", lambda: str(missing))
+
+    with pytest.raises(FileNotFoundError) as ei:
+        actions.set_scade_one_home(scade_one_home=None)
+    assert "No Scade One installation directory found" in str(ei.value)
 
 
 def test_set_scade_one_home_with_existing_dir_initializes_api():
@@ -112,7 +120,6 @@ def test_set_scade_one_home_with_existing_dir_initializes_api():
     assert actions.scade_one_api is not None
 
 
-@pytest.mark.xfail(reason="temporarly deactivated, waiting fix #23", strict=False)
 def test_set_scade_one_home_with_none_existing_dir():
     """
     Provide a wrong install path string depending on the OS:

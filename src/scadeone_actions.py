@@ -61,30 +61,29 @@ class ScadeOneActions:
     scade_one_api = None
 
     def __init__(self, scade_one_home=None):
-        self.set_scade_one_home(scade_one_home, strict=False)
+        self.set_scade_one_home(scade_one_home)
 
-    def set_scade_one_home(self, scade_one_home=None, strict=True):
+    def set_scade_one_home(self, scade_one_home=None):
         """Set or update the Scade One API."""
         if scade_one_home is None:
             # Get the Scade One home directory from environment variable or registry
             scade_one_home = get_scade_one_home()
 
         if scade_one_home is None:
-            if strict:
-                raise FileNotFoundError(
-                    "Scade One home directory not found. Set SCADE_ONE_HOME environment variable or pass the path as an argument."
-                )
+            raise FileNotFoundError(
+                "Scade One home directory not found. Set SCADE_ONE_HOME environment variable or pass the path as an argument."
+            )
         else:
             # Check if the Scade One home directory exists
-            s_one_install = Path(scade_one_home)
-            if not s_one_install.is_dir() and strict:
+            scade_one_install = Path(scade_one_home)
+            if not scade_one_install.is_dir():
                 raise FileNotFoundError(
                     f"No Scade One installation directory found in:{scade_one_home}"
                 )
             else:
-                print(f"Scade One home directory set to: {s_one_install}")
+                print(f"Scade One home directory set to: {scade_one_install}")
                 # initialize the Scade One Python API
-                self.scade_one_api = ScadeOne(install_dir=s_one_install)
+                self.scade_one_api = ScadeOne(install_dir=scade_one_install)
 
     def register_actions(
         self, subparsers: ArgumentParser, global_parser: ArgumentParser = None
