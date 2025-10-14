@@ -225,6 +225,14 @@ class ScadeOneActions:
 
 def scadeone_actions(args=None):
     """Scade One Python actions"""
+    # Pre-parse only -s/--scade_one_home to have it BEFORE we create the actions instance.
+    #    This prevents a FileNotFoundError in __init__ when the user actually passed a valid -s
+    pre = ArgumentParser(add_help=False)
+    pre.add_argument("-s", "--scade_one_home", type=str, default=None)
+    pre_args, remaining = pre.parse_known_args(args)
+
+    # Build the instance with the (possibly provided) install path.
+    s_one_actions = ScadeOneActions(scade_one_home=pre_args.scade_one_home)
     # Create a parser for global options only
     global_parser = ArgumentParser(add_help=False)
     # Add --scade_one_home as a global argument
@@ -250,7 +258,7 @@ def scadeone_actions(args=None):
 
     # Create an instance of ScadeOneActions to register actions
     # This will also initialize the Scade One API with the default or provided path as environment variable
-    s_one_actions = ScadeOneActions(scade_one_home=None)
+
     s_one_actions.register_actions(subparsers, global_parser=global_parser)
 
     # Parse all arguments
