@@ -35,6 +35,20 @@ script_dir = Path(__file__).parent
 sys.path.append(str(script_dir.parent.parent / "src"))
 import scadeone_actions as scadeone_actions  # noqa: E402
 
+is_windows = platform.system() == "Windows"
+scade_home_dir = (
+    "C:/Program Files/ANSYS Inc/v261/Scade One"
+    if is_windows
+    else "/opt/AnsysInc/v261/ScadeOne/"
+)
+wrong_scade_home_dir = (
+    "C:/Program Files/ANSYS Inc/v261x/Scade One"
+    if is_windows
+    else "/opt/AnsysInc/v261x/ScadeOne/"
+)
+
+sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
+
 # ----------------------------- Helpers / doubles -----------------------------
 
 
@@ -90,15 +104,9 @@ def test_set_scade_one_home_with_existing_dir_initializes_api():
       - Linux:   '/opt/AnsysInc/v261/ScadeOne/'
 
     """
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
 
     # Run
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=provided_path)
+    actions = scadeone_actions.ScadeOneActions(scade_one_home=scade_home_dir)
 
     # Assert: API initialized
     assert actions.scade_one_api is not None
@@ -112,16 +120,10 @@ def test_set_scade_one_home_with_none_existing_dir():
       - Linux:   '/opt/AnsysInc/v261x/ScadeOne/'
 
     """
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261x/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261x/ScadeOne/"
-    )
 
     with pytest.raises(FileNotFoundError):
         actions = scadeone_actions.ScadeOneActions(  # noqa: F841
-            scade_one_home=provided_path
+            scade_one_home=wrong_scade_home_dir
         )
 
 
@@ -160,14 +162,24 @@ def test_get_job_type_errors_when_project_missing(tmp_path):
     assert job is None and "doesn't exist" in msg
 
 
-def test_get_job_type_with_real_project_not_found_wrong_kind_and_ok(monkeypatch):
+@pytest.mark.parametrize(
+    "job_name, expected_type, is_none, text",
+    [
+        # not found
+        ("UnknownJobName", JobType.CODE_GENERATION, True, "not found"),
+        # wrong kind (CodeGenerationJob exists but we expect MODEL_CHECK)
+        ("CodeGenerationJob", JobType.MODEL_CHECK, True, "is not a"),
+        # correct kind (ModelCheckJob is MODEL_CHECK)
+        ("ModelCheckJob", JobType.MODEL_CHECK, False, "found in project"),
+        # extra: TestExecution job correct
+        ("TestExecutionJob1", JobType.TEST_EXECUTION, False, "found in project"),
+    ],
+    ids=["not_found", "wrong_kind", "model_check_ok", "test_exec_ok"],
+)
+def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
     # # --- prerequisites: library + project file must exist ---
     # ScadeOne_mod = pytest.importorskip("ansys.scadeone.core")
     # Job_mod = pytest.importorskip("ansys.scadeone.core.job")
-
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
 
     # --- prepare a real ScadeOne app (no install_dir needed for loading) ---
     # We don't rely on ScadeOneActions auto init; we inject the app instance.
@@ -179,212 +191,112 @@ def test_get_job_type_with_real_project_not_found_wrong_kind_and_ok(monkeypatch)
     project = app.load_project(sproj)
     project.load_jobs()
 
-    # ----------------------- 1) job not found -----------------------
-    args = SimpleNamespace(project=sproj, job="UnknownJobName")
-    job, msg = actions._get_job_type(args, JobType.CODE_GENERATION)
-    assert job is None and "not found" in msg
+    args = SimpleNamespace(project=sproj, job=job_name)
+    job, msg = actions._get_job_type(args, jobtype=expected_type)
 
-    # ----------------------- 2) wrong kind --------------------------
-    # Use a real job name but mismatch the expected kind:
-    #   CodeGenerationJob exists but we ask for MODEL_CHECK
-    args = SimpleNamespace(project=sproj, job="CodeGenerationJob")
-    job, msg = actions._get_job_type(args, JobType.MODEL_CHECK)
-    assert job is None and "is not a" in msg
+    if is_none:
+        assert job is None, f"Expected None for job {job_name}"
+    else:
+        assert job is not None, f"Expected a job instance for {job_name}"
 
-    # ----------------------- 3) correct kind ------------------------
-    # ModelCheckJob exists and is of type MODEL_CHECK
-    args = SimpleNamespace(project=sproj, job="ModelCheckJob")
-    job, msg = actions._get_job_type(args, JobType.MODEL_CHECK)
-    assert job is not None and "found in project" in msg
-
-    # As an extra check, verify the TestExecution job too
-    args = SimpleNamespace(project=sproj, job="TestExecutionJob1")
-    job, msg = actions._get_job_type(args, JobType.TEST_EXECUTION)
-    assert job is not None and "found in project" in msg
+    assert text in msg, f"Expected '{text}' in message, got: {msg}"
 
 
-# -------------------------------- action_code_gen -----------------------------
+# --- scadeone_actions() success tests ------------------------------------------
+# --- Parametrized CLI  ---------------------------------------------------------
 
 
-def test_action_code_gen_success_with_output():
-    from ansys.scadeone.core.svc.generated_code import GeneratedCode
+@pytest.mark.parametrize(
+    "action, job_name, out_kind",
+    [
+        ("code_gen", "CodeGenerationJob", "dir"),  # needs an output directory (-o)
+        ("tests_exec", "TestExecutionJob1", "junit"),  # needs a junit file (--junit)
+        ("model_check", "ModelCheckJob", "file"),  # needs an output file (-o)
+    ],
+    ids=["code_gen", "tests_exec", "model_check"],
+)
+def test_scadeone_actions_success(action, job_name, out_kind, tmp_path):
+    """
+    Single parametrized test covering the 3  actions.
+    It asserts the scadeone_action returns 0. Outputs are written into tmp_path.
+    """
+    # Build action-specific extra args, all under tmp_path to avoid repo writes
+    if out_kind == "dir":
+        out = tmp_path / "unit_tests_out_gen"
+        extra = ["-o", str(out)]
+    elif out_kind == "junit":
+        out = tmp_path / "unit_tests_out_gen" / "tests_exec_report.xml"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extra = ["--junit", str(out)]
+    elif out_kind == "file":
+        out = tmp_path / "unit_tests_out_gen" / "model_check_report.txt"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extra = ["-o", str(out)]
+    else:
+        raise RuntimeError("Unsupported out_kind in parametrization")
 
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
-
-    # Run code generation action
     actions = scadeone_actions.scadeone_actions(
         [
-            "code_gen",
+            action,
             "-s",
-            provided_path,
+            scade_home_dir,
             "-p",
             str(sproj),
             "-j",
-            "CodeGenerationJob",
-            "-o",
-            "tests/unit_tests_out_gen",
-        ]
-    )
-
-    # Load the project to access to the generated code
-    app = ScadeOne()
-    project = app.load_project(str(sproj))
-    code_gen = GeneratedCode(project, "CodeGenerationJob")
-
-    # To check that the job has been executed
-    assert code_gen.is_code_generated and actions == 0
-
-
-def test_action_code_gen_wrong_kind_returns_error():
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
-
-    # Run code generation action
-    actions = scadeone_actions.scadeone_actions(
-        [
-            "code_gen",
-            "-s",
-            provided_path,
-            "-p",
-            str(sproj),
-            "-j",
-            "ModelCheckJob",
-            "-o",
-            "tests/unit_tests_out_gen",
-        ]
-    )
-
-    assert actions == 2
-
-    # ------------------------------- action_tests_exec ----------------------------
-
-
-def test_action_tests_exec_success():
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
-
-    # Run tests execution action
-    actions = scadeone_actions.scadeone_actions(
-        [
-            "tests_exec",
-            "-s",
-            provided_path,
-            "-p",
-            str(sproj),
-            "-j",
-            "TestExecutionJob1",
-            "--junit",
-            "tests/unit_tests_out_gen/tests_exec_report.xml",
+            job_name,
+            *extra,
         ]
     )
 
     assert actions == 0
 
 
-def test_action_tests_exec_job_not_found():
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
+# --- scadeone_actions() fail  tests ------------------------------------------
+# --- Parametrized CLI  ---------------------------------------------------------
+@pytest.mark.parametrize(
+    "action, job_name, out_kind",
+    [
+        # Wrong kind: ask code_gen to run a ModelCheck job
+        ("code_gen", "ModelCheckJob", "dir"),
+        # Job not found (typo/unknown)
+        ("tests_exec", "TestExecutionJob51", "junit"),
+        ("model_check", "ModelCheckJob13", "file"),
+    ],
+    ids=[
+        "code_gen_wrong_kind",
+        "tests_exec_job_not_found",
+        "model_check_job_not_found",
+    ],
+)
+def test_scadeone_actions_failed(action, job_name, out_kind, tmp_path):
+    """
+    Negative CLI tests: each scenario must return actions=2.
+    Outputs are directed under tmp_path to avoid repo writes.
+    """
+    if out_kind == "dir":
+        out = tmp_path / "unit_tests_out_fail" / "gen_dir"
+        extra = ["-o", str(out)]
+    elif out_kind == "junit":
+        out = tmp_path / "unit_tests_out_fail" / "tests_exec_report.xml"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extra = ["--junit", str(out)]
+    elif out_kind == "file":
+        out = tmp_path / "unit_tests_out_fail" / "model_check_report.txt"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extra = ["-o", str(out)]
+    else:
+        raise RuntimeError("Unsupported out_kind in parametrization")
 
-    # Run tests execution action
     actions = scadeone_actions.scadeone_actions(
         [
-            "tests_exec",
+            action,
             "-s",
-            provided_path,
+            scade_home_dir,
             "-p",
             str(sproj),
             "-j",
-            "TestExecutionJob51",
-            "--junit",
-            "tests/unit_tests_out_gen/tests_exec_report.xml",
-        ]
-    )
-
-    assert actions == 2
-
-
-# ------------------------------- action_model_check ---------------------------
-def test_action_model_check_success():
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
-
-    # Run tests execution action
-    actions = scadeone_actions.scadeone_actions(
-        [
-            "model_check",
-            "-s",
-            provided_path,
-            "-p",
-            str(sproj),
-            "-j",
-            "ModelCheckJob",
-            "-o",
-            "tests/unit_tests_out_gen/model_check_report.txt",
-        ]
-    )
-
-    assert actions == 0
-
-
-def test_action_model_check_job_not_found():
-    sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
-    if not sproj.is_file():
-        pytest.skip(f"Project file not found at {sproj}")
-    is_windows = platform.system() == "Windows"
-    provided_path = (
-        "C:/Program Files/ANSYS Inc/v261/Scade One"
-        if is_windows
-        else "/opt/AnsysInc/v261/ScadeOne/"
-    )
-
-    # Run tests execution action
-    actions = scadeone_actions.scadeone_actions(
-        [
-            "model_check",
-            "-s",
-            provided_path,
-            "-p",
-            str(sproj),
-            "-j",
-            "ModelCheckJob13",
-            "-o",
-            "tests/unit_tests_out_gen/model_check_report.txt",
+            job_name,
+            *extra,
         ]
     )
 

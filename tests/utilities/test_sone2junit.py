@@ -30,10 +30,10 @@ from pytest import MonkeyPatch
 script_dir = Path(__file__).parent
 sys.path.append(str(script_dir.parent.parent / "src"))
 
-# ---------- Fakes to isolate external deps (parser + junitparser) ----------
+# ---------- Stubs to isolate external deps (parser + junitparser) ----------
 
 
-class FakeTestCaseObj:
+class StubTestCaseObj:
     """Minimal representation of a Scade One test case."""
 
     def __init__(self, harness, start, end, status):
@@ -43,7 +43,7 @@ class FakeTestCaseObj:
         self.status = status  # "passed" | "failed" | "skipped"
 
 
-class FakeJUnitTestCase:
+class StubJUnitTestCase:
     """Replacement for junitparser.TestCase."""
 
     def __init__(self, name, classname=None, time=None):
@@ -60,7 +60,7 @@ class FakeJUnitTestCase:
         self._skipped = True
 
 
-class FakeTestSuite:
+class StubTestSuite:
     """Replacement for junitparser.TestSuite."""
 
     def __init__(self, name):
@@ -71,7 +71,7 @@ class FakeTestSuite:
         self.testcases.append(tc)
 
 
-class FakeJUnitXml:
+class StubJUnitXml:
     """Replacement for junitparser.JUnitXml that records calls."""
 
     last_added_suite = None
@@ -79,14 +79,14 @@ class FakeJUnitXml:
     last_pretty = None
 
     def add_testsuite(self, suite):
-        FakeJUnitXml.last_added_suite = suite
+        StubJUnitXml.last_added_suite = suite
 
     def write(self, dest, pretty=True):
         dest = Path(dest)
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text("<testsuites/>")
-        FakeJUnitXml.last_write_dest = str(dest)
-        FakeJUnitXml.last_pretty = pretty
+        StubJUnitXml.last_write_dest = str(dest)
+        StubJUnitXml.last_pretty = pretty
 
 
 class _Marker:  # stand-in for junitparser.Error/Skipped
@@ -122,19 +122,19 @@ def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
 
     # 2) Mock the Scade One parser to return deterministic test cases.
     fake_cases = [
-        FakeTestCaseObj(
+        StubTestCaseObj(
             harness="QuadTest::TestVerticalAccel",
             start="2025-10-07T15:47:58.713",
             end="2025-10-07T15:47:58.713",
             status="passed",
         ),
-        FakeTestCaseObj(
+        StubTestCaseObj(
             harness="QuadTest::TestRightRoll",
             start="2025-10-07T15:47:58.713",
             end="2025-10-07T15:47:58.713",
             status="failed",
         ),
-        FakeTestCaseObj(
+        StubTestCaseObj(
             harness="QuadTest::TestExeVerticalAccem",
             start="2025-10-07T15:47:58.713",
             end="2025-10-07T15:47:58.713",
@@ -148,9 +148,9 @@ def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
     )
 
     # 3) Mock junitparser symbols used by sone2junit.
-    monkeypatch.setattr(utilities, "TestCase", FakeJUnitTestCase)
-    monkeypatch.setattr(utilities, "TestSuite", FakeTestSuite)
-    monkeypatch.setattr(utilities, "JUnitXml", FakeJUnitXml)
+    monkeypatch.setattr(utilities, "TestCase", StubJUnitTestCase)
+    monkeypatch.setattr(utilities, "TestSuite", StubTestSuite)
+    monkeypatch.setattr(utilities, "JUnitXml", StubJUnitXml)
     monkeypatch.setattr(utilities, "Error", _Marker)
     monkeypatch.setattr(utilities, "Skipped", _Marker)
 
@@ -160,11 +160,11 @@ def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
     # 5) Verify a file was written and junit "write" was called.
     assert junit_out.exists()
     assert isinstance(msg, str) and msg.strip() != ""
-    assert FakeJUnitXml.last_write_dest == str(junit_out)
+    assert StubJUnitXml.last_write_dest == str(junit_out)
 
     # 6) Inspect the produced suite and its testcases.
-    suite = FakeJUnitXml.last_added_suite
-    assert isinstance(suite, FakeTestSuite)
+    suite = StubJUnitXml.last_added_suite
+    assert isinstance(suite, StubTestSuite)
     assert len(suite.testcases) == 3
 
     tc0, tc1, tc2 = suite.testcases
