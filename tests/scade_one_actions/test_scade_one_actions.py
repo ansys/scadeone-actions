@@ -85,23 +85,22 @@ class DummyJob:
 
 def test_scade_one_home_none_get_scade_one_home_none(monkeypatch):
     """When no path is provided and discovery returns None, raise FileNotFoundError."""
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
+
     monkeypatch.setattr(scadeone_actions, "get_scade_one_home", lambda: None)
 
     with pytest.raises(FileNotFoundError) as ei:
-        actions.set_scade_one_home(scade_one_home=None)
+        scadeone_actions.ScadeOneActions(scade_one_home=None)
     assert "Scade One home directory not found" in str(ei.value)
 
 
 def test_scade_one_home_none_and_nonexistent_dir(monkeypatch, tmp_path):
     """When discovery returns a non-existent directory, raise FileNotFoundError."""
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
     missing = tmp_path / "does_not_exist"
-
     monkeypatch.setattr(scadeone_actions, "get_scade_one_home", lambda: str(missing))
 
     with pytest.raises(FileNotFoundError) as ei:
-        actions.set_scade_one_home(scade_one_home=None)
+        scadeone_actions.ScadeOneActions(scade_one_home=None)
+
     assert "No Scade One installation directory found" in str(ei.value)
 
 
@@ -144,7 +143,7 @@ def test_register_actions_registers_exactly_expected_subcommands():
 
     argument_parser = ArgumentParser()
     sub = argument_parser.add_subparsers(dest="action", required=False)
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
+    actions = scadeone_actions.ScadeOneActions(scade_one_home=scade_home_dir)
 
     # Lightweight parser used as "global_parser"
     global_parser = ArgumentParser(add_help=False)
@@ -163,7 +162,7 @@ def test_register_actions_registers_exactly_expected_subcommands():
 
 
 def test_get_job_type_errors_when_project_missing(tmp_path):
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
+    actions = scadeone_actions.ScadeOneActions(scade_one_home=scade_home_dir)
     args = SimpleNamespace(project=tmp_path / "missing.sproj", job="J")
     job, msg = actions._get_job_type(args, jobtype="ANY")
     assert job is None and "doesn't exist" in msg
@@ -191,7 +190,7 @@ def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
     # --- prepare a real ScadeOne app (no install_dir needed for loading) ---
     # We don't rely on ScadeOneActions auto init; we inject the app instance.
     app = ScadeOne()
-    actions = scadeone_actions.ScadeOneActions(scade_one_home=None)
+    actions = scadeone_actions.ScadeOneActions(scade_one_home=scade_home_dir)
     actions.scade_one_api = app  # give the real loader to our action object
 
     # Ensure jobs are loadable by the API
