@@ -23,7 +23,6 @@
 import sys
 from pathlib import Path
 
-import pytest
 from pytest import MonkeyPatch
 
 # add the path containing utilities.py
@@ -40,7 +39,7 @@ class StubTestCaseObj:
         self.harness = harness
         self.start = start  # "%Y-%m-%dT%H:%M:%S.%f"
         self.end = end
-        self.status = status  # "passed" | "failed" | "skipped"
+        self.status = status  # "passed" | "failed" | "error"
 
 
 class StubJUnitTestCase:
@@ -51,13 +50,13 @@ class StubJUnitTestCase:
         self.classname = classname
         self.time = time
         self._error = False
-        self._skipped = False
+        self._failed = False
 
     def add_error(self, _err):
         self._error = True
 
-    def add_skipped(self, _sk):
-        self._skipped = True
+    def add_failure(self, _sk):
+        self._failed = True
 
 
 class StubTestSuite:
@@ -110,11 +109,10 @@ def test_returns_message_and_no_output_when_input_missing(tmp_path: Path):
     assert not junit_out.exists()
 
 
-@pytest.mark.xfail(reason="temporarly deactivated, waiting fix #22", strict=False)
 def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
     import utilities
 
-    """Happy path: parses 3 cases (Pass/Fail/Skip), maps to JUnit, and writes a file."""
+    """Happy path: parses 3 cases (Pass/Fail/Error), maps to JUnit, and writes a file."""
     # 1) Provide a real (dummy) input file so is_file() passes.
     sone_in = tmp_path / "job_results.json"
     sone_in.write_text("{}")
@@ -132,13 +130,13 @@ def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
             harness="QuadTest::TestRightRoll",
             start="2025-10-07T15:47:58.713",
             end="2025-10-07T15:47:58.713",
-            status="failed",
+            status="error",
         ),
         StubTestCaseObj(
             harness="QuadTest::TestExeVerticalAccem",
             start="2025-10-07T15:47:58.713",
             end="2025-10-07T15:47:58.713",
-            status="error",
+            status="failed",
         ),
     ]
     monkeypatch.setattr(
@@ -152,7 +150,7 @@ def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
     monkeypatch.setattr(utilities, "TestSuite", StubTestSuite)
     monkeypatch.setattr(utilities, "JUnitXml", StubJUnitXml)
     monkeypatch.setattr(utilities, "Error", _Marker)
-    monkeypatch.setattr(utilities, "Skipped", _Marker)
+    monkeypatch.setattr(utilities, "Failure", _Marker)
 
     # 4) Call the function under test.
     msg = utilities.sone2junit(sone_in, junit_out)
@@ -169,9 +167,9 @@ def test_writes_junit(monkeypatch: MonkeyPatch, tmp_path: Path):
 
     tc0, tc1, tc2 = suite.testcases
 
-    # Status mapping: Failed -> error, Skipped -> skipped
+    # Status mapping: failed -> failure, error -> error
     assert tc1._error is True
-    assert tc2._skipped is True
+    assert tc2._failed is True
 
     # Classnames should carry the harness name
     assert tc0.classname == "QuadTest::TestVerticalAccel"
