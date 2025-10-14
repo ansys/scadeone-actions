@@ -50,9 +50,9 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
                     - datetime.strptime(test_case.start, "%Y-%m-%dT%H:%M:%S.%f")
                 ).total_seconds(),
             )
-            if test_case.status == "Failed":
+            if test_case.status == "failed":
                 junit_test_case.add_error(Error())
-            elif test_case.status == "Skipped":
+            elif test_case.status == "skipped":
                 junit_test_case.add_skipped(Skipped())
             test_suite.add_testcase(junit_test_case)
             tc_count += 1
@@ -68,7 +68,7 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
     return message
 
 
-def get_windows_s_one_install_dirs() -> list[str]:
+def get_windows_scade_one_install_dirs() -> list[str]:
     """Get the list of Scade One installation directories."""
 
     names = []
@@ -100,7 +100,7 @@ def get_scade_one_home() -> str:
     scade_one_home = os.getenv("SCADE_ONE_HOME")
     if scade_one_home is None:
         # If scade_one_home is not set, try to find Scade One installation directories
-        dirs = get_windows_s_one_install_dirs()
+        dirs = get_windows_scade_one_install_dirs()
         if dirs:
             # Use the most recent Scade One installation directory
             scade_one_home = dirs[-1]

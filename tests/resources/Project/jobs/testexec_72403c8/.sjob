@@ -1,0 +1,15 @@
+{
+  "Version": "2.1",
+  "Kind": "TestExecution",
+  "Properties": {
+    "RootDeclarations": [
+      "testModule::harness1_operator0"
+    ],
+    "Name": "TestExecutionJob0",
+    "CustomArguments": "",
+    "TestResultFile": "testResults.json"
+  },
+  "InputPaths": [
+    "assets/testModule.swant"
+  ]
+}

@@ -1,3 +1,4 @@
+exclude: '\.(swan|swant)$'
 repos:
 
 - repo: https://github.com/psf/black

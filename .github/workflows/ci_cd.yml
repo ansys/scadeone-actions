@@ -14,7 +14,7 @@ env:
   test-library-name: 'ansys-scadeone-actions'
   SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
   SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne/'
-  PROJECT: 'tests/QuadFlightControl/QuadFlightControl.sproj'
+  PROJECT: 'tests/resources/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
   JOB_CODE_GEN: "CodeGen"
 
@@ -207,13 +207,6 @@ jobs:
         run: |
           # Run tests
           python -m pytest --basetemp=tmp
-
-      # - name: "Upload coverage reports to Codecov"
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     slug: ansys/scade-actions
-      #     files: .cov/xml
 
   tests:
     name: "All Tests"

@@ -58,7 +58,7 @@ class ScadeOneActions:
     It checks if Scade One is installed and provides methods to run available Scade One tools & services (pre/post processing)
     """
 
-    s_one_api = None
+    scade_one_api = None
 
     def __init__(self, scade_one_home=None):
         self.set_scade_one_home(scade_one_home, strict=False)
@@ -84,7 +84,7 @@ class ScadeOneActions:
             else:
                 print(f"Scade One home directory set to: {s_one_install}")
                 # initialize the Scade One Python API
-                self.s_one_api = ScadeOne(install_dir=s_one_install)
+                self.scade_one_api = ScadeOne(install_dir=s_one_install)
 
     def register_actions(
         self, subparsers: ArgumentParser, global_parser: ArgumentParser = None
@@ -131,7 +131,7 @@ class ScadeOneActions:
         """Get a job from a Scade One project with the specified job type"""
         if args.project.is_file():
             # Load the Scade One project
-            project = self.s_one_api.load_project(args.project)
+            project = self.scade_one_api.load_project(args.project)
             # get the job in the project
             project.load_jobs()
             job = project.get_job(args.job)

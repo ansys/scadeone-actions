@@ -1,0 +1,53 @@
+-- version swan: 2025.1 graph: 2.0 swant: 1.1
+use module0;
+
+_harness harness1_operator0
+{
+  diagram
+    (#0 block (_source operator0_inputs)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle operator0_outputs)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator0
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+}
+
+_harness harness1_operator1
+{
+  diagram
+    (#0 block (_source operator1_inputs)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle operator1_outputs)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator1
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    (assert $myAssert: #6 ; 
+      where
+        (#6 group)
+    #pragma diagram {"xy":"H71700;V16800"} #end)
+    (#7 expr #8 > #9
+      where
+        (#8 group)
+        (#9 group)
+    #pragma diagram {"xy":"H60700;V9350"} #end)
+    (#10 expr 100_i32
+    #pragma diagram {"xy":"H27625;V22125","wh":"12000;3200"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+    (#11 wire #10 => #9
+    #pragma diagram {"wp":"#10 h19050 v-10875 #9"} #end)
+    (#12 wire #7 => #6
+    #pragma diagram {"wp":"#7 h3500 v4675 h-4000 v2775 #6"} #end)
+    (#13 wire #2 .(o0) => #8
+    #pragma diagram {"wp":"v5425|#2 h5350 v2025 #8"} #end)
+}
