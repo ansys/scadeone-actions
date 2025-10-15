@@ -26,7 +26,7 @@ from datetime import datetime
 from pathlib import Path
 
 from ansys.scadeone.core.svc.test.test_results import TestResultsParser
-from junitparser import Error, JUnitXml, Skipped, TestCase, TestSuite
+from junitparser import Error, Failure, JUnitXml, TestCase, TestSuite
 
 
 def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
@@ -50,10 +50,10 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
                     - datetime.strptime(test_case.start, "%Y-%m-%dT%H:%M:%S.%f")
                 ).total_seconds(),
             )
-            if test_case.status == "failed":
+            if test_case.status == "error":
                 junit_test_case.add_error(Error())
-            elif test_case.status == "skipped":
-                junit_test_case.add_skipped(Skipped())
+            elif test_case.status == "failed":
+                junit_test_case.add_failure(Failure())
             test_suite.add_testcase(junit_test_case)
             tc_count += 1
         # create the JUnit XML object
