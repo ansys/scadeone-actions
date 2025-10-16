@@ -125,4 +125,4 @@ runs:
       with:
         name: Tests exec report
         path: ${{ inputs.tests-exec-report }}
-        reporter: jest-junit
+        reporter: java-junit
