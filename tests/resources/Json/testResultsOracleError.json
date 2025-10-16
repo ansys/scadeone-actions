@@ -2,26 +2,83 @@
   "version": "1.0",
   "test_cases": [
     {
-      "harness": "testModule::oracle_failed",
-      "start": "2025-10-15T11:40:21.588",
-      "end": "2025-10-15T11:40:21.588",
-      "status": "error",
-      "cycles_count": 4,
+      "harness": "myTestModule::testPassed",
+      "start": "2025-10-16T09:39:05.213",
+      "end": "2025-10-16T09:39:05.213",
+      "status": "passed",
+      "cycles_count": 20,
       "test_items": [
         {
           "kind": "oracle",
-          "model_path": "testModule::oracle_failed/#1:o0",
-          "passed_count": 0
+          "model_path": "myTestModule::testPassed/#1:o0",
+          "passed_count": 20
         },
         {
           "kind": "oracle",
-          "model_path": "testModule::oracle_failed/#1:o1",
-          "passed_count": 3,
+          "model_path": "myTestModule::testPassed/#1:o1",
+          "passed_count": 0
+        }
+      ]
+    },
+    {
+      "harness": "myTestModule::testErrorAssert",
+      "start": "2025-10-16T09:39:05.267",
+      "end": "2025-10-16T09:39:05.267",
+      "status": "error",
+      "cycles_count": 1,
+      "test_items": [
+        {
+          "kind": "oracle",
+          "model_path": "myTestModule::testErrorAssert/#1:o0",
+          "passed_count": 1
+        },
+        {
+          "kind": "oracle",
+          "model_path": "myTestModule::testErrorAssert/#1:o1",
+          "passed_count": 1
+        },
+        {
+          "kind": "assert",
+          "model_path": "myTestModule::testErrorAssert/$testO0_50",
+          "passed_count": 0,
           "failures": [
             {
-              "cycle": 4,
-              "actual": "2",
-              "expected": "3",
+              "cycle": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "harness": "myTestModule::testOracleFailed",
+      "start": "2025-10-16T09:39:05.330",
+      "end": "2025-10-16T09:39:05.330",
+      "status": "failed",
+      "cycles_count": 21,
+      "test_items": [
+        {
+          "kind": "oracle",
+          "model_path": "myTestModule::testOracleFailed/#1:o0",
+          "passed_count": 20,
+          "failures": [
+            {
+              "cycle": 21,
+              "actual": "1",
+              "expected": "0",
+              "float32_rtol": 1e-05,
+              "float64_rtol": 1e-09
+            }
+          ]
+        },
+        {
+          "kind": "oracle",
+          "model_path": "myTestModule::testOracleFailed/#1:o1",
+          "passed_count": 20,
+          "failures": [
+            {
+              "cycle": 21,
+              "actual": "-1",
+              "expected": "0",
               "float32_rtol": 1e-05,
               "float64_rtol": 1e-09
             }
