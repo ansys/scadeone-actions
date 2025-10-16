@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "test_cases": [
+    {
+      "harness": "testModule::harness1_operator0",
+      "start": "2025-10-15T11:38:04.654",
+      "end": "2025-10-15T11:38:04.654",
+      "status": "passed",
+      "cycles_count": 100,
+      "test_items": [
+        {
+          "kind": "oracle",
+          "model_path": "testModule::harness1_operator0/#1:o0",
+          "passed_count": 0
+        },
+        {
+          "kind": "oracle",
+          "model_path": "testModule::harness1_operator0/#1:o1",
+          "passed_count": 0
+        }
+      ]
+    }
+  ]
+}

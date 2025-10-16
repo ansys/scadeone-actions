@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "test_cases": [
+    {
+      "harness": "testModule::oracle_failed",
+      "start": "2025-10-15T11:40:21.588",
+      "end": "2025-10-15T11:40:21.588",
+      "status": "error",
+      "cycles_count": 4,
+      "test_items": [
+        {
+          "kind": "oracle",
+          "model_path": "testModule::oracle_failed/#1:o0",
+          "passed_count": 0
+        },
+        {
+          "kind": "oracle",
+          "model_path": "testModule::oracle_failed/#1:o1",
+          "passed_count": 3,
+          "failures": [
+            {
+              "cycle": 4,
+              "actual": "2",
+              "expected": "3",
+              "float32_rtol": 1e-05,
+              "float64_rtol": 1e-09
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

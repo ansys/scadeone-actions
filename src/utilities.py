@@ -25,7 +25,7 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
-from ansys.scadeone.core.svc.test.test_results import TestResultsParser
+from ansys.scadeone.core.svc.test.test_results import TestResultsParser, TestStatus
 from junitparser import Error, Failure, JUnitXml, TestCase, TestSuite
 
 
@@ -50,10 +50,30 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
                     - datetime.strptime(test_case.start, "%Y-%m-%dT%H:%M:%S.%f")
                 ).total_seconds(),
             )
-            if test_case.status == "error":
-                junit_test_case.add_error(Error())
-            elif test_case.status == "failed":
-                junit_test_case.add_failure(Failure())
+            if test_case.status == TestStatus.Error:
+                for ti in test_case.test_items:
+                    for failure in ti.failures:
+                        junit_test_case.result = [
+                            Error(
+                                "Check failed %s :%s cycle:%s actual:%s expected:%s"
+                                % (
+                                    ti.kind.name,
+                                    ti.model_path,
+                                    failure.cycle,
+                                    failure.actual,
+                                    failure.expected,
+                                )
+                            )
+                        ]
+            elif test_case.status == TestStatus.Failed:
+                for ti in test_case.test_items:
+                    for failure in ti.failures:
+                        junit_test_case.result = [
+                            Failure(
+                                "Check failed %s:%s cycle:%s"
+                                % (ti.kind.name, ti.model_path, failure.cycle)
+                            )
+                        ]
             test_suite.add_testcase(junit_test_case)
             tc_count += 1
         # create the JUnit XML object
