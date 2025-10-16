@@ -138,7 +138,6 @@ jobs:
   test-fail:
    name: "Test Exec with errors"
    runs-on: [self-hosted, 'ScadeOne']
-   # needs: setup
    steps:
     - name: Run model check action
       uses: ./tests-exec
@@ -146,14 +145,14 @@ jobs:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: 'tests/resources/Project/Project.sproj'
           job-name: 'myTestJob'
-          # tests-exec-report: 'output/testReportWithErros.xml'
+          fail-on-error: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
   model-check:
     name: "Model Check"
     runs-on: [self-hosted, 'ScadeOne']
-    # needs: setup
+    needs: test-fail
     steps:
       - name: Run model check action
         uses: ./model-check
