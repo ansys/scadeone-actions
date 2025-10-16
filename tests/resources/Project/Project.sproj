@@ -22,6 +22,36 @@
       "Kind": "SimulationData",
       "Path": "resources\\operator1_outputs.sd",
       "Key": "operator1_outputs"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\testPassedIn.sd",
+      "Key": "testPassedIn"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\testPassedOut.sd",
+      "Key": "testPassedOut"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\testErrorAssertIn.sd",
+      "Key": "testErrorAssertIn"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\testErrorAssertOut.sd",
+      "Key": "testErrorAssertOut"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\testOracleFailedIn.sd",
+      "Key": "testOracleFailedIn"
+    },
+    {
+      "Kind": "SimulationData",
+      "Path": "resources\\testOracleFailedOut.sd",
+      "Key": "testOracleFailedOut"
     }
   ]
 }
