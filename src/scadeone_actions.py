@@ -27,7 +27,8 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 from ansys.scadeone.core.job import Job, JobType
-from ansys.scadeone.core.scadeone import ScadeOne
+from ansys.scadeone.core.scadeone import Project, ScadeOne
+from ansys.scadeone.core.svc.fmu import FMU_2_Export
 
 from utilities import get_scade_one_home, sone2junit
 
@@ -152,6 +153,16 @@ class ScadeOneActions:
         else:
             return None, f"Error: Scade One project {args.project} doesn't exist"
 
+    def _get_project(self, args) -> tuple[Project, str]:
+        """Get a project from a Scade One project file"""
+        if args.project.is_file():
+            # Load the Scade One project
+            project = self.scade_one_api.load_project(args.project)
+            # project.load_jobs()
+            return project, f"Project '{args.project}' loaded successfully."
+        else:
+            return None, f"Error: Scade One project {args.project} doesn't exist"
+
     def _args_model_check(self, parser):
         """Add arguments for the model-check action"""
         self._job_args(parser)
@@ -193,6 +204,50 @@ class ScadeOneActions:
                 job.storage.path.parent / "out", args.output, dirs_exist_ok=True
             )
             message += "\n" + f"Generated code saved to {args.output} folder"
+
+        return result.code, message
+
+    def _args_fmu_export(self, parser):
+        """Only common job arguments for the fmu-export action"""
+        self._job_args(parser)
+        parser.add_argument(
+            "-k",
+            "--kind",
+            required="True",
+            help="FMI kind: ‘ME’ for Model Exchange (default), ‘CS’ for Co-Simulation",
+            type=str,
+        )
+
+    def action_fmu_export(self, args):
+        """Generate FMU from a Scade One project for a given job."""
+        if sys.platform != "win32":
+            message = "Error: FMU export is only supported on Windows platforms."
+            return 2, message
+
+        job, message = self._get_job_type(args, JobType.CODE_GENERATION)
+        if not job:
+            return 2, message
+        project, message = self._get_project(args)
+        if not project:
+            return 2, message
+        # Execute the code generation job
+        result = job.run()
+        message = result.message
+
+        if result.code == 0 and args.output:
+            # Save generated code in a folder specified by args.output
+            Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(
+                job.storage.path.parent / "out", args.output, dirs_exist_ok=True
+            )
+            message += "\n" + f"Generated code saved to {args.output} folder"
+
+        # Export FMU from generated code
+        if args.kind not in ["ME", "CS"]:
+            return 2, f"Error: Invalid FMI kind '{args.kind}'. Use 'ME' or 'CS'."
+        fmu = FMU_2_Export(project, args.job)
+        fmu.generate(args.kind, args.output)
+        fmu.build(True)
 
         return result.code, message
 
