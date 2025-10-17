@@ -203,8 +203,8 @@ jobs:
         uses: ./fmu-export
         with:
           scade-dir: ${{ env.SCADE_ONE_DIR_WINDOWS  }}
-          project: ${{ env.PROJECT }}
-          job-name: ${{ env.JOB_CODE_GEN }}
+          project: 'tests/resources/Project/Project.sproj'
+          job-name: 'CodeGenerationJob'
           kind: 'ME'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 

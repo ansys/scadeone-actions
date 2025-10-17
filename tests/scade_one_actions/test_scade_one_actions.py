@@ -231,6 +231,7 @@ def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
     ],
     ids=["code_gen", "tests_exec", "model_check", "fmu_export_ME", "fmu_export_CS"],
 )
+@pytest.mark.skipif(not is_windows, reason="FMU export is only supported on Windows.")
 def test_scadeone_actions_success(action, job_name, out_kind, tmp_path):
     """
     Single parametrized test covering the 3  actions.
@@ -337,6 +338,7 @@ def test_scadeone_actions_failed(action, job_name, out_kind, tmp_path):
     ],
     ids=["fmu_export_wrong_jog_kind", "fmu_export_wrong_fmu_kind"],
 )
+@pytest.mark.skipif(not is_windows, reason="FMU export is only supported on Windows.")
 def test_scadeone_actions_fmu_export_wrong_kind(
     action, job_name, out_kind, wrong_kind, tmp_path
 ):
