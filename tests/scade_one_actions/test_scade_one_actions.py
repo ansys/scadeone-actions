@@ -325,5 +325,45 @@ def test_scadeone_actions_failed(action, job_name, out_kind, tmp_path):
             *extra,
         ]
     )
+    assert actions == 2
 
+
+@pytest.mark.parametrize(
+    "action, job_name, out_kind, wrong_kind",
+    [
+        # Wrong kind: ask fmu_export to run a ModelCheck job
+        ("fmu_export", "ModelCheckJob", "fmu_ME", "ME"),
+        ("fmu_export", "CodeGenerationJob", "fmu_CS", "CE"),
+    ],
+    ids=["fmu_export_wrong_jog_kind", "fmu_export_wrong_fmu_kind"],
+)
+def test_scadeone_actions_fmu_export_wrong_kind(
+    action, job_name, out_kind, wrong_kind, tmp_path
+):
+    """
+    Test fmu_export with a job of the wrong kind (e.g., ModelCheckJob).
+    Outputs are directed under tmp_path to avoid repo writes.
+    """
+    if out_kind == "fmu_ME":
+        out = tmp_path / "unit_tests_out_fail" / "exported_model_ME"
+        extra = ["-o", str(out)]
+        extra += ["-k", wrong_kind]  # FMU export flag
+    elif out_kind == "fmu_CS":
+        out = tmp_path / "unit_tests_out_fail" / "exported_model_CS"
+        extra = ["-o", str(out)]
+        extra += ["-k", wrong_kind]  # FMU export flag
+    else:
+        raise RuntimeError("Unsupported out_kind in parametrization")
+    actions = scadeone_actions.scadeone_actions(
+        [
+            action,
+            "-s",
+            scade_home_dir,
+            "-p",
+            str(sproj),
+            "-j",
+            job_name,
+            *extra,
+        ]
+    )
     assert actions == 2
