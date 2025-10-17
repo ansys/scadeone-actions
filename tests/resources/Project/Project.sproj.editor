@@ -3,10 +3,12 @@
     "jobs\\codegen_4e1773c\\.sjob",
     "jobs\\check_9afb66a\\.sjob",
     "jobs\\testexec_72403c8\\.sjob",
-    "jobs\\testexec_b9ce8f1\\.sjob"
+    "jobs\\testexec_b9ce8f1\\.sjob",
+    "jobs\\testexec_d0984e9\\.sjob"
   ],
   "ModulesOrder": [
     "assets\\module0.swan",
-    "assets\\testModule.swant"
+    "assets\\testModule.swant",
+    "assets\\myTestModule.swant"
   ]
 }

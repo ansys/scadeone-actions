@@ -1,0 +1,82 @@
+{
+  "version": "1.0",
+  "test_cases": [
+    {
+      "harness": "testModule::harness1_operator1",
+      "start": "2025-10-15T13:36:18.058",
+      "end": "2025-10-15T13:36:18.058",
+      "status": "failed",
+      "cycles_count": 1,
+      "test_items": [
+        {
+          "kind": "oracle",
+          "model_path": "testModule::harness1_operator1/#1:o0",
+          "passed_count": 0
+        },
+        {
+          "kind": "oracle",
+          "model_path": "testModule::harness1_operator1/#1:o1",
+          "passed_count": 0
+        },
+        {
+          "kind": "assert",
+          "model_path": "testModule::harness1_operator1/$myAssert",
+          "passed_count": 0,
+          "failures": [
+            {
+              "cycle": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+        "harness": "testModule::harness1_operator1",
+        "start": "2025-10-15T13:36:18.058",
+        "end": "2025-10-15T13:36:18.058",
+        "status": "failed",
+        "cycles_count": 1,
+        "test_items": [
+          {
+            "kind": "oracle",
+            "model_path": "testModule::harness1_operator1/#1:o0",
+            "passed_count": 0
+          },
+          {
+            "kind": "oracle",
+            "model_path": "testModule::harness1_operator1/#1:o1",
+            "passed_count": 0
+          },
+          {
+            "kind": "assert",
+            "model_path": "testModule::harness1_operator1/$myAssert",
+            "passed_count": 0,
+            "failures": [
+              {
+                "cycle": 1
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "harness": "testModule::harness1_operator0",
+        "start": "2025-10-15T11:38:04.654",
+        "end": "2025-10-15T11:38:04.654",
+        "status": "passed",
+        "cycles_count": 100,
+        "test_items": [
+          {
+            "kind": "oracle",
+            "model_path": "testModule::harness1_operator0/#1:o0",
+            "passed_count": 0
+          },
+          {
+            "kind": "oracle",
+            "model_path": "testModule::harness1_operator0/#1:o1",
+            "passed_count": 0
+          }
+        ]
+      }
+  ]
+}

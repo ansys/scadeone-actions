@@ -73,6 +73,12 @@ inputs:
     default: pip
     type: string
 
+  fail-on-error:
+    description: |
+      Set action as failed if test report contains any failed test.
+    required: false
+    default: 'true'
+
   checkout:
     description: >
       Whether to clone the repository on the CI/CD machine.
@@ -125,4 +131,5 @@ runs:
       with:
         name: Tests exec report
         path: ${{ inputs.tests-exec-report }}
-        reporter: jest-junit
+        reporter: java-junit
+        fail-on-error: ${{ inputs.fail-on-error }}

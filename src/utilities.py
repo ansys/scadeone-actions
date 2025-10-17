@@ -25,8 +25,24 @@ import platform
 from datetime import datetime
 from pathlib import Path
 
-from ansys.scadeone.core.svc.test.test_results import TestResultsParser
+import ansys.scadeone.core.svc.test.test_results as tr
 from junitparser import Error, Failure, JUnitXml, TestCase, TestSuite
+
+
+def build_failure_message(ti: tr.TestItem, failure: Failure) -> str:
+    # "oracle" or "assert"
+    kind = ti.kind
+    parts = [
+        f"Check failed {kind.name} :{ti.model_path}",
+        f"cycle:{failure.cycle}",
+    ]
+    if kind == tr.TestItemKind.Oracle:
+        # add only if available
+        if getattr(failure, "actual", None) is not None:
+            parts.append(f"actual:{failure.actual}")
+        if getattr(failure, "expected", None) is not None:
+            parts.append(f"expected:{failure.expected}")
+    return " ".join(parts)
 
 
 def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
@@ -36,7 +52,7 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
         # get the test name from the test result file
         sone_test_name = sone_test_file.stem
         # Parse the XML results file
-        tests_results = TestResultsParser.load(sone_test_file)
+        tests_results = tr.TestResultsParser.load(sone_test_file)
         # create the test suite ### the test name is not in TestResults object ###
         test_suite = TestSuite(name=sone_test_name)
         # add test cases to the suite
@@ -50,10 +66,18 @@ def sone2junit(sone_test_file: Path, junit_file: Path) -> str:
                     - datetime.strptime(test_case.start, "%Y-%m-%dT%H:%M:%S.%f")
                 ).total_seconds(),
             )
-            if test_case.status == "error":
-                junit_test_case.add_error(Error())
-            elif test_case.status == "failed":
-                junit_test_case.add_failure(Failure())
+            if test_case.status == tr.TestStatus.Error:
+                for ti in test_case.test_items:
+                    for failure in ti.failures:
+                        junit_test_case.result = [
+                            Error(build_failure_message(ti, failure))
+                        ]
+            elif test_case.status == tr.TestStatus.Failed:
+                for ti in test_case.test_items:
+                    for failure in ti.failures:
+                        junit_test_case.result = [
+                            Failure(build_failure_message(ti, failure))
+                        ]
             test_suite.add_testcase(junit_test_case)
             tc_count += 1
         # create the JUnit XML object

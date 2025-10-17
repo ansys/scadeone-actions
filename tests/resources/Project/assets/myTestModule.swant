@@ -1,0 +1,70 @@
+-- version swan: 2025.1 graph: 2.0 swant: 1.1
+use module0;
+
+_harness testPassed
+{
+  diagram
+    (#0 block (_source testPassedIn)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle testPassedOut)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator0
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+}
+
+_harness testErrorAssert
+{
+  diagram
+    (#0 block (_source testErrorAssertIn)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle testErrorAssertOut)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator0
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    (assert $testO0_50: #6 ; 
+      where
+        (#6 group)
+    #pragma diagram {"xy":"H59700;V11600"} #end)
+    (#7 expr #8 > #9
+      where
+        (#8 group)
+        (#9 group)
+    #pragma diagram {"xy":"H44300;V31275"} #end)
+    (#10 expr 50_i32
+    #pragma diagram {"xy":"H10975;V35600","wh":"10000;3200"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+    (#11 wire #10 => #9
+    #pragma diagram {"wp":"#10 h15675 v-2425 #9"} #end)
+    (#12 wire #7 => #6
+    #pragma diagram {"wp":"#7 h3700 v-19675 #6"} #end)
+    (#13 wire #2 .(o0) => #8
+    #pragma diagram {"wp":"v4000|#2 h2000 v6533 h-9700 v18842 #8"} #end)
+}
+
+_harness testOracleFailed
+{
+  diagram
+    (#0 block (_source testOracleFailedIn)
+    #pragma diagram {"xy":"H0;V0","wh":"12000;7000"} #end)
+    (#1 block (_oracle testOracleFailedOut)
+    #pragma diagram {"xy":"H70000;V0","wh":"12000;7000"} #end)
+    (#2 block module0::operator0
+    #pragma swt under_test #end
+    #pragma diagram {"xy":"H35000;V0","wh":"20000;14000"} #end)
+    
+    (#3 wire #0 => #2
+    #pragma diagram {"wp":"v0|#0 #2"} #end)
+    (#4 wire #2 => #1
+    #pragma diagram {"wp":"v0|#2 #1"} #end)
+}
