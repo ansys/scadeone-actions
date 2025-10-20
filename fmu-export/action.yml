@@ -25,7 +25,7 @@ name: |
 
 description: |
   The ``fmu-export`` action builds a FMU package from a given Scade One operator.
-  The FMU Export supports the FMI 2.0 version for Model-Exchange and Co-Simulation.
+  The FMU export supports the FMI 2.0 version for Model-Exchange and Co-Simulation.
 
 inputs:
 

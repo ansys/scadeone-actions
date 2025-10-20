@@ -71,7 +71,7 @@ FMU export
 
        **Supported Platforms**
 
-       This version only supports gcc compiler on 64 bits Windows platform.
+       This version only supports gcc compiler on 64-bits Windows platform.
 
     Example
     +++++++
