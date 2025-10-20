@@ -207,6 +207,28 @@ class ScadeOneActions:
 
         return result.code, message
 
+    def _args_simulation(self, parser):
+        """Only common job arguments for the code-gen action"""
+        self._job_args(parser)
+
+    def action_simulation(self, args):
+        """Run a simulation for a job in a Scade One project"""
+        job, message = self._get_job_type(args, JobType.SIMULATION)
+        if not job:
+            return 2, message
+        # Execute the job with the specified simulation parameters
+        result = job.run()
+        message = result.message
+
+        if result.code == 0 and args.output:
+            # Save simulation results in a folder specified by args.output
+            Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(
+                job.storage.path.parent / "out", args.output, dirs_exist_ok=True
+            )
+            message += "\n" + f"Simulation results saved to {args.output}"
+        return result.code, message
+
     def _args_fmu_export(self, parser):
         """Only common job arguments for the fmu-export action"""
         self._job_args(parser)

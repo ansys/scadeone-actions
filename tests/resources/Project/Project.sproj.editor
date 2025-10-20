@@ -4,7 +4,8 @@
     "jobs\\check_9afb66a\\.sjob",
     "jobs\\testexec_72403c8\\.sjob",
     "jobs\\testexec_b9ce8f1\\.sjob",
-    "jobs\\testexec_d0984e9\\.sjob"
+    "jobs\\testexec_d0984e9\\.sjob",
+    "jobs\\simu_68cea04\\.sjob"
   ],
   "ModulesOrder": [
     "assets\\module0.swan",
