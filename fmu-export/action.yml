@@ -1,0 +1,144 @@
+# Copyright (C) 2024 - 2025 ANSYS, Inc. and/or its affiliates.
+# SPDX-License-Identifier: MIT
+#
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+name: |
+  Scade One tests execution
+
+description: |
+  The ``fmu-export`` action builds a FMU package from a given Scade One operator.
+  The FMU export supports the FMI 2.0 version for Model-Exchange and Co-Simulation.
+
+inputs:
+
+  scade-dir:
+    description: |
+      Scade One installation directory, e.g.
+      ``'C:\Program Files\Ansys Inc\v252\Scade One'`` or ``'/opt/AnsysInc/v252/ScadeOne/'``.
+    required: true
+    type: string
+
+  project:
+    description: >
+      Path of the Scade One project.
+    required: true
+    type: string
+
+  job-name:
+    description: >
+      Name of the job to run. This is used to identify the job in the Scade One
+      actions workflow.
+    required: true
+    type: string
+
+  # Optional inputs
+
+  kind:
+    description: |
+      The FMI kind, ``ME`` for Model Exchange, ``CS`` for Co-Simulation.
+    required: false
+    default: 'ME'
+    type: string
+
+  target-dir:
+    description: |
+      Path to he output directory where the files are generated. If not provided, they will be
+      saved in the ``'output/fmu_gen'`` directory.
+    required: false
+    default: 'output/fmu_gen'
+    type: string
+
+  artifact-name:
+      description: |
+        Name for the uploaded artifact. This will be used as the name for the FMU archive.
+      required: false
+      default: 'fmu-file'
+      type: string
+
+  python-version:
+    description: |
+      Python version used for installing and execution of the build process.
+    required: false
+    default: '3.10'
+    type: string
+
+  use-python-cache:
+    description: |
+      Whether to use the Python cache for installing previously downloaded
+      libraries.
+    required: false
+    default: pip
+    type: string
+
+
+  checkout:
+    description: >
+      Whether to clone the repository on the CI/CD machine.
+    default: 'true'
+    required: false
+
+runs:
+  using: "composite"
+
+  # On Windows Git bash must be in the path of the runner.
+  # A start-runner.bat script should add the path to the PATH environment variable
+  # before to run the runner.
+
+  steps:
+    - name: "Install Git and clone project"
+      uses: actions/checkout@v5
+      if: ${{ inputs.checkout == 'true' }}
+
+    - name: "Set up Python"
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: ${{ inputs.use-python-cache }}
+
+    - name: "Install dependencies"
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt -U --find-links "${{ inputs.scade-dir }}/pyscadeone"
+
+    - name: "Run Scade One Actions"
+      shell: python
+      run: |
+        import os
+        import sys
+        # Add the src directory to the Python path so that the scadeone_actions module can
+        # be imported.
+        # The GITHUB_ACTION_PATH environment variable is set by GitHub Actions to the path of
+        # the action being run.
+        # It is used to ensure that the scadeone_actions module can be found.
+        src_path = os.path.abspath(os.path.join(os.environ["GITHUB_ACTION_PATH"], "..", "src"))
+        sys.path.insert(1, src_path)
+        from scadeone_actions import scadeone_actions
+        # Run the Scade One action with the provided inputs.
+        scadeone_actions(['fmu_export', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', '${{ inputs.target-dir }}', '-k', '${{ inputs.kind }}'])
+
+    - name: "Upload FMU file"
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.target-dir }}/*.fmu
+        if-no-files-found: error
+        retention-days: 7

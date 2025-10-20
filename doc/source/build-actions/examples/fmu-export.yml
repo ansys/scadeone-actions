@@ -1,0 +1,10 @@
+fmu-export:
+  name: "FMU build basic example"
+  runs-on: [self-hosted, 'ScadeOne']
+  steps:
+    - name: "FMU export"
+      uses: ansys/scadeone-actions/fmu-export@{{ version }}
+      with:
+        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
+        job-name: 'CodeGen'

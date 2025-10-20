@@ -149,7 +149,7 @@ def test_register_actions_registers_exactly_expected_subcommands():
     global_parser = ArgumentParser(add_help=False)
     actions.register_actions(sub, global_parser=global_parser)
 
-    expected = {"model_check", "code_gen", "tests_exec"}
+    expected = {"model_check", "code_gen", "tests_exec", "fmu_export"}
     actual = set(sub.choices.keys())
 
     # Must be exactly the expected set — no extras, no missing ones
@@ -218,9 +218,20 @@ def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
         ("code_gen", "CodeGenerationJob", "dir"),  # needs an output directory (-o)
         ("tests_exec", "TestExecutionJob1", "junit"),  # needs a junit file (--junit)
         ("model_check", "ModelCheckJob", "file"),  # needs an output file (-o)
+        (
+            "fmu_export",
+            "CodeGenerationJob",
+            "fmu_ME",
+        ),  # needs an output dir (-o) and kind (-k ME/CS)
+        (
+            "fmu_export",
+            "CodeGenerationJob",
+            "fmu_CS",
+        ),  # needs an output dir (-o) and kind (-k ME/CS)
     ],
-    ids=["code_gen", "tests_exec", "model_check"],
+    ids=["code_gen", "tests_exec", "model_check", "fmu_export_ME", "fmu_export_CS"],
 )
+@pytest.mark.skipif(not is_windows, reason="FMU export is only supported on Windows.")
 def test_scadeone_actions_success(action, job_name, out_kind, tmp_path):
     """
     Single parametrized test covering the 3  actions.
@@ -238,6 +249,16 @@ def test_scadeone_actions_success(action, job_name, out_kind, tmp_path):
         out = tmp_path / "unit_tests_out_gen" / "model_check_report.txt"
         out.parent.mkdir(parents=True, exist_ok=True)
         extra = ["-o", str(out)]
+    elif out_kind == "fmu_ME":
+        out = tmp_path / "unit_tests_out_gen" / "exported_model_ME"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extra = ["-o", str(out)]
+        extra += ["-k", "ME"]  # FMU export flag
+    elif out_kind == "fmu_CS":
+        out = tmp_path / "unit_tests_out_gen" / "exported_model_CS"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extra = ["-o", str(out)]
+        extra += ["-k", "CS"]  # FMU export flag
     else:
         raise RuntimeError("Unsupported out_kind in parametrization")
 
@@ -305,5 +326,46 @@ def test_scadeone_actions_failed(action, job_name, out_kind, tmp_path):
             *extra,
         ]
     )
+    assert actions == 2
 
+
+@pytest.mark.parametrize(
+    "action, job_name, out_kind, wrong_kind",
+    [
+        # Wrong kind: ask fmu_export to run a ModelCheck job
+        ("fmu_export", "ModelCheckJob", "fmu_ME", "ME"),
+        ("fmu_export", "CodeGenerationJob", "fmu_CS", "CE"),
+    ],
+    ids=["fmu_export_wrong_jog_kind", "fmu_export_wrong_fmu_kind"],
+)
+@pytest.mark.skipif(not is_windows, reason="FMU export is only supported on Windows.")
+def test_scadeone_actions_fmu_export_wrong_kind(
+    action, job_name, out_kind, wrong_kind, tmp_path
+):
+    """
+    Test fmu_export with a job of the wrong kind (e.g., ModelCheckJob).
+    Outputs are directed under tmp_path to avoid repo writes.
+    """
+    if out_kind == "fmu_ME":
+        out = tmp_path / "unit_tests_out_fail" / "exported_model_ME"
+        extra = ["-o", str(out)]
+        extra += ["-k", wrong_kind]  # FMU export flag
+    elif out_kind == "fmu_CS":
+        out = tmp_path / "unit_tests_out_fail" / "exported_model_CS"
+        extra = ["-o", str(out)]
+        extra += ["-k", wrong_kind]  # FMU export flag
+    else:
+        raise RuntimeError("Unsupported out_kind in parametrization")
+    actions = scadeone_actions.scadeone_actions(
+        [
+            action,
+            "-s",
+            scade_home_dir,
+            "-p",
+            str(sproj),
+            "-j",
+            job_name,
+            *extra,
+        ]
+    )
     assert actions == 2

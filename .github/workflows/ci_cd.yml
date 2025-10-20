@@ -136,7 +136,7 @@ jobs:
           dependencies: qpdf
 
   test-fail:
-   name: "Test Exec with errors"
+   name: "Test Execution with errors"
    runs-on: [self-hosted, 'ScadeOne']
    steps:
     - name: Run model check action
@@ -194,6 +194,20 @@ jobs:
           job-name: ${{ env.JOB_CODE_GEN }}
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
+  fmu-export:
+    name: "FMU Export"
+    runs-on: [self-hosted, 'ScadeOne', 'Windows']
+    needs: code-gen
+    steps:
+      - name: Run FMU export
+        uses: ./fmu-export
+        with:
+          scade-dir: ${{ env.SCADE_ONE_DIR_WINDOWS  }}
+          project: 'tests/resources/Project/Project.sproj'
+          job-name: 'CodeGenerationJob'
+          kind: 'ME'
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+
   unit-tests:
     name: "Run Python unit tests"
     runs-on: [self-hosted, 'ScadeOne']
@@ -220,7 +234,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [code-gen, unit-tests]
+    needs: [fmu-export, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
