@@ -208,6 +208,19 @@ jobs:
           kind: 'ME'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
+  simulation:
+    name: "Simulation"
+    runs-on: [self-hosted, 'ScadeOne']
+    needs: fmu-export
+    steps:
+        - name: Run simulation action
+          uses: ./simulation
+          with:
+            scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
+            project: ${{ env.PROJECT }}
+            job-name: 'SimVerticalAccel'
+            python-version: ${{ env.MAIN_PYTHON_VERSION }}
+
   unit-tests:
     name: "Run Python unit tests"
     runs-on: [self-hosted, 'ScadeOne']
@@ -234,7 +247,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [fmu-export, unit-tests]
+    needs: [simulation, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
