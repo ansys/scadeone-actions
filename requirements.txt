@@ -1,2 +1,2 @@
-# ansys-scadeone-core
+ansys-scadeone-core
 junitparser
