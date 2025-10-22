@@ -138,7 +138,12 @@ jobs:
   test-fail:
    name: "Test Execution with errors"
    runs-on: [self-hosted, 'ScadeOne']
+   strategy:
+     matrix:
+       os: [ubuntu-latest, windows-latest]
    steps:
+    - name: "Install Git and clone project"
+      uses: actions/checkout@v5
     - name: Run model check action
       uses: ./tests-exec
       with:
@@ -146,20 +151,27 @@ jobs:
           project: 'tests/resources/Project/Project.sproj'
           job-name: 'myTestJob'
           fail-on-error: 'false'
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
   model-check:
     name: "Model Check"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: test-fail
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run model check action
         uses: ./model-check
         with:
             scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
             project: ${{ env.PROJECT }}
             job-name: ${{ env.JOB_MODEL_CHECK }}
+            artifact-name: 'model-check-artifact-${{ matrix.os }}'
+            checkout: 'false'
             python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
@@ -167,38 +179,48 @@ jobs:
   tests-exec:
     name: "Test Execution"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: model-check
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run model tests execution
         uses: ./tests-exec
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   code-gen:
     name: "Code Generation"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: tests-exec
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run model code generation
         uses: ./code-gen
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
+          artifact-name: 'code-gen-artifact-${{ matrix.os }}'
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   fmu-export:
     name: "FMU Export"
     runs-on: [self-hosted, 'ScadeOne', 'Windows']
-    needs: code-gen
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run FMU export
         uses: ./fmu-export
         with:
@@ -206,7 +228,27 @@ jobs:
           project: 'tests/resources/Project/Project.sproj'
           job-name: 'CodeGenerationJob'
           kind: 'ME'
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
+
+  simulation:
+    name: "Simulation"
+    runs-on: [self-hosted, 'ScadeOne']
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+        - name: "Install Git and clone project"
+          uses: actions/checkout@v5
+        - name: Run simulation action
+          uses: ./simulation
+          with:
+            scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
+            project: ${{ env.PROJECT }}
+            job-name: 'SimVerticalAccel'
+            artifact-name: 'simulation-artifact-${{ matrix.os }}'
+            checkout: 'false'
+            python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   unit-tests:
     name: "Run Python unit tests"
@@ -234,7 +276,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [fmu-export, unit-tests]
+    needs: [test-fail, model-check, code-gen, tests-exec, fmu-export, simulation, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"

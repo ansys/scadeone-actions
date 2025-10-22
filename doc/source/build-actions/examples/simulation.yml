@@ -1,0 +1,10 @@
+code-gen:
+  name: "Simulation basic example"
+  runs-on: [self-hosted, 'ScadeOne']
+  steps:
+    - name: "Simulate job"
+      uses: ansys/scadeone-actions/simulation@{{ version }}
+      with:
+        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
+        job-name: 'SimulationJob'

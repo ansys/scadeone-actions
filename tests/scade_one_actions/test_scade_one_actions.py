@@ -149,7 +149,7 @@ def test_register_actions_registers_exactly_expected_subcommands():
     global_parser = ArgumentParser(add_help=False)
     actions.register_actions(sub, global_parser=global_parser)
 
-    expected = {"model_check", "code_gen", "tests_exec", "fmu_export"}
+    expected = {"model_check", "code_gen", "tests_exec", "fmu_export", "simulation"}
     actual = set(sub.choices.keys())
 
     # Must be exactly the expected set — no extras, no missing ones
@@ -228,8 +228,16 @@ def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
             "CodeGenerationJob",
             "fmu_CS",
         ),  # needs an output dir (-o) and kind (-k ME/CS)
+        ("simulation", "SimulationJob", "dir"),  # needs an output directory (-o)
     ],
-    ids=["code_gen", "tests_exec", "model_check", "fmu_export_ME", "fmu_export_CS"],
+    ids=[
+        "code_gen",
+        "tests_exec",
+        "model_check",
+        "fmu_export_ME",
+        "fmu_export_CS",
+        "simulation",
+    ],
 )
 @pytest.mark.skipif(not is_windows, reason="FMU export is only supported on Windows.")
 def test_scadeone_actions_success(action, job_name, out_kind, tmp_path):

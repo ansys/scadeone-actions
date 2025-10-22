@@ -107,7 +107,7 @@ runs:
       shell: bash
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt -U --find-links "${{ inputs.scade-dir }}/resources/packages/pyscadeone"
+        pip install -r requirements/requirements.txt -U --find-links "${{ inputs.scade-dir }}/resources/packages/pyscadeone"
 
     - name: "Run Scade One Actions"
       shell: python
