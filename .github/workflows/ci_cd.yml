@@ -255,7 +255,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [test-fail, model-check, code-gen, tests-exec, unit-tests]
+    needs: [test-fail, model-check, code-gen, tests-exec, fmu-export, simulation, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
