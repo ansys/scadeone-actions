@@ -165,6 +165,7 @@ jobs:
             scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
             project: ${{ env.PROJECT }}
             job-name: ${{ env.JOB_MODEL_CHECK }}
+            artifact-name: 'model-check-artifact-${{ matrix.os }}'
             python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
@@ -199,6 +200,7 @@ jobs:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
+          artifact-name: 'code-gen-artifact-${{ matrix.os }}'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   fmu-export:
