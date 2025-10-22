@@ -142,6 +142,8 @@ jobs:
      matrix:
        os: [ubuntu-latest, windows-latest]
    steps:
+    - name: "Install Git and clone project"
+      uses: actions/checkout@v5
     - name: Run model check action
       uses: ./tests-exec
       with:
@@ -149,6 +151,7 @@ jobs:
           project: 'tests/resources/Project/Project.sproj'
           job-name: 'myTestJob'
           fail-on-error: 'false'
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
@@ -159,6 +162,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run model check action
         uses: ./model-check
         with:
@@ -166,6 +171,7 @@ jobs:
             project: ${{ env.PROJECT }}
             job-name: ${{ env.JOB_MODEL_CHECK }}
             artifact-name: 'model-check-artifact-${{ matrix.os }}'
+            checkout: 'false'
             python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
 
@@ -179,12 +185,15 @@ jobs:
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run model tests execution
         uses: ./tests-exec
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ matrix.job-tests }}
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   code-gen:
@@ -194,6 +203,8 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run model code generation
         uses: ./code-gen
         with:
@@ -201,12 +212,15 @@ jobs:
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
           artifact-name: 'code-gen-artifact-${{ matrix.os }}'
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   fmu-export:
     name: "FMU Export"
     runs-on: [self-hosted, 'ScadeOne', 'Windows']
     steps:
+      - name: "Install Git and clone project"
+        uses: actions/checkout@v5
       - name: Run FMU export
         uses: ./fmu-export
         with:
@@ -214,6 +228,7 @@ jobs:
           project: 'tests/resources/Project/Project.sproj'
           job-name: 'CodeGenerationJob'
           kind: 'ME'
+          checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   simulation:
@@ -223,12 +238,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
+        - name: "Install Git and clone project"
+          uses: actions/checkout@v5
         - name: Run simulation action
           uses: ./simulation
           with:
             scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
             project: ${{ env.PROJECT }}
             job-name: 'SimVerticalAccel'
+            artifact-name: 'simulation-artifact-${{ matrix.os }}'
+            checkout: 'false'
             python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
   unit-tests:
