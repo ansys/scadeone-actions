@@ -138,6 +138,9 @@ jobs:
   test-fail:
    name: "Test Execution with errors"
    runs-on: [self-hosted, 'ScadeOne']
+   strategy:
+     matrix:
+       os: [ubuntu-latest, windows-latest]
    steps:
     - name: Run model check action
       uses: ./tests-exec
@@ -152,7 +155,9 @@ jobs:
   model-check:
     name: "Model Check"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: test-fail
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Run model check action
         uses: ./model-check
@@ -167,9 +172,9 @@ jobs:
   tests-exec:
     name: "Test Execution"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: model-check
     strategy:
       matrix:
+        os: [ubuntu-latest, windows-latest]
         # Define the list of jobs to run for model tests execution
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
@@ -184,7 +189,9 @@ jobs:
   code-gen:
     name: "Code Generation"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: tests-exec
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
       - name: Run model code generation
         uses: ./code-gen
@@ -197,7 +204,6 @@ jobs:
   fmu-export:
     name: "FMU Export"
     runs-on: [self-hosted, 'ScadeOne', 'Windows']
-    needs: code-gen
     steps:
       - name: Run FMU export
         uses: ./fmu-export
@@ -211,7 +217,9 @@ jobs:
   simulation:
     name: "Simulation"
     runs-on: [self-hosted, 'ScadeOne']
-    needs: fmu-export
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
     steps:
         - name: Run simulation action
           uses: ./simulation
@@ -247,7 +255,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [simulation, unit-tests]
+    needs: [test-fail, model-check, code-gen, tests-exec, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
