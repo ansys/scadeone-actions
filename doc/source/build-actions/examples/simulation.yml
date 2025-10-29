@@ -1,4 +1,4 @@
-code-gen:
+code-generation:
   name: "Simulation basic example"
   runs-on: [self-hosted, 'ScadeOne']
   steps:

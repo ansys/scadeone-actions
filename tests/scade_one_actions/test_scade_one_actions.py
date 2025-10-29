@@ -149,7 +149,13 @@ def test_register_actions_registers_exactly_expected_subcommands():
     global_parser = ArgumentParser(add_help=False)
     actions.register_actions(sub, global_parser=global_parser)
 
-    expected = {"model_check", "code_gen", "tests_exec", "fmu_export", "simulation"}
+    expected = {
+        "model_check",
+        "code_generation",
+        "test_execution",
+        "fmu_export",
+        "simulation",
+    }
     actual = set(sub.choices.keys())
 
     # Must be exactly the expected set — no extras, no missing ones
@@ -215,8 +221,16 @@ def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
 @pytest.mark.parametrize(
     "action, job_name, out_kind",
     [
-        ("code_gen", "CodeGenerationJob", "dir"),  # needs an output directory (-o)
-        ("tests_exec", "TestExecutionJob1", "junit"),  # needs a junit file (--junit)
+        (
+            "code_generation",
+            "CodeGenerationJob",
+            "dir",
+        ),  # needs an output directory (-o)
+        (
+            "test_execution",
+            "TestExecutionJob1",
+            "junit",
+        ),  # needs a junit file (--junit)
         ("model_check", "ModelCheckJob", "file"),  # needs an output file (-o)
         (
             "fmu_export",
@@ -231,8 +245,8 @@ def test_get_job_type_parametrized(job_name, expected_type, is_none, text):
         ("simulation", "SimulationJob", "dir"),  # needs an output directory (-o)
     ],
     ids=[
-        "code_gen",
-        "tests_exec",
+        "code_generation",
+        "test_execution",
         "model_check",
         "fmu_export_ME",
         "fmu_export_CS",
@@ -291,10 +305,10 @@ def test_scadeone_actions_success(action, job_name, out_kind, tmp_path):
 @pytest.mark.parametrize(
     "action, job_name, out_kind",
     [
-        # Wrong kind: ask code_gen to run a ModelCheck job
-        ("code_gen", "ModelCheckJob", "dir"),
+        # Wrong kind: ask code_generation to run a ModelCheck job
+        ("code_generation", "ModelCheckJob", "dir"),
         # Job not found (typo/unknown)
-        ("tests_exec", "TestExecutionJob51", "junit"),
+        ("test_execution", "TestExecutionJob51", "junit"),
         ("model_check", "ModelCheckJob13", "file"),
     ],
     ids=[

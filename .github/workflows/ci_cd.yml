@@ -145,7 +145,7 @@ jobs:
     - name: "Install Git and clone project"
       uses: actions/checkout@v5
     - name: Run model check action
-      uses: ./tests-exec
+      uses: ./test-execution
       with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: 'tests/resources/Project/Project.sproj'
@@ -176,7 +176,7 @@ jobs:
 
 
 
-  tests-exec:
+  test-execution:
     name: "Test Execution"
     runs-on: [self-hosted, 'ScadeOne']
     strategy:
@@ -188,7 +188,7 @@ jobs:
       - name: "Install Git and clone project"
         uses: actions/checkout@v5
       - name: Run model tests execution
-        uses: ./tests-exec
+        uses: ./test-execution
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
@@ -196,7 +196,7 @@ jobs:
           checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
-  code-gen:
+  code-generation:
     name: "Code Generation"
     runs-on: [self-hosted, 'ScadeOne']
     strategy:
@@ -206,12 +206,12 @@ jobs:
       - name: "Install Git and clone project"
         uses: actions/checkout@v5
       - name: Run model code generation
-        uses: ./code-gen
+        uses: ./code-generation
         with:
           scade-dir: ${{ runner.os == 'Windows' && env.SCADE_ONE_DIR_WINDOWS || env.SCADE_ONE_DIR_LINUX }}
           project: ${{ env.PROJECT }}
           job-name: ${{ env.JOB_CODE_GEN }}
-          artifact-name: 'code-gen-artifact-${{ matrix.os }}'
+          artifact-name: 'code-generation-artifact-${{ matrix.os }}'
           checkout: 'false'
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
@@ -276,7 +276,7 @@ jobs:
 
   tests:
     name: "All Tests"
-    needs: [test-fail, model-check, code-gen, tests-exec, fmu-export, simulation, unit-tests]
+    needs: [test-fail, model-check, code-generation, test-execution, fmu-export, simulation, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: "Synchronization"
