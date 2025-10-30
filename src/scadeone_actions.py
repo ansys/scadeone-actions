@@ -184,11 +184,11 @@ class ScadeOneActions:
 
         return result.code, message
 
-    def _args_code_gen(self, parser):
-        """Only common job arguments for the code-gen action"""
+    def _args_code_generation(self, parser):
+        """Only common job arguments for the code-generation action"""
         self._job_args(parser)
 
-    def action_code_gen(self, args):
+    def action_code_generation(self, args):
         """Generate C code from a job in a Scade One project"""
         job, message = self._get_job_type(args, JobType.CODE_GENERATION)
         if not job:
@@ -208,7 +208,7 @@ class ScadeOneActions:
         return result.code, message
 
     def _args_simulation(self, parser):
-        """Only common job arguments for the code-gen action"""
+        """Only common job arguments for the code-generation action"""
         self._job_args(parser)
 
     def action_simulation(self, args):
@@ -273,7 +273,7 @@ class ScadeOneActions:
 
         return result.code, message
 
-    def _args_tests_exec(self, parser):
+    def _args_test_execution(self, parser):
         """Only common job arguments for the test_exec action"""
         self._job_args(parser)
         parser.add_argument(
@@ -283,7 +283,7 @@ class ScadeOneActions:
             default=None,
         )
 
-    def action_tests_exec(self, args):
+    def action_test_execution(self, args):
         """Execute tests cases from a job in a Scade One project"""
         job, message = self._get_job_type(args, JobType.TEST_EXECUTION)
         if not job:
