@@ -31,7 +31,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: micnncim/action-label-syncer@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -143,7 +143,7 @@ jobs:
        os: [ubuntu-latest, windows-latest]
    steps:
     - name: "Install Git and clone project"
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
     - name: Run model check action
       uses: ./test-execution
       with:
@@ -163,7 +163,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
       - name: "Install Git and clone project"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run model check action
         uses: ./model-check
         with:
@@ -186,7 +186,7 @@ jobs:
         job-tests: ['TestExeVerticalAccel', 'QuadTest', 'TestExeRightRoll']
     steps:
       - name: "Install Git and clone project"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run model tests execution
         uses: ./test-execution
         with:
@@ -204,7 +204,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
       - name: "Install Git and clone project"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run model code generation
         uses: ./code-generation
         with:
@@ -220,7 +220,7 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne', 'Windows']
     steps:
       - name: "Install Git and clone project"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run FMU export
         uses: ./fmu-export
         with:
@@ -239,7 +239,7 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
         - name: "Install Git and clone project"
-          uses: actions/checkout@v5
+          uses: actions/checkout@v6
         - name: Run simulation action
           uses: ./simulation
           with:
@@ -255,7 +255,7 @@ jobs:
     runs-on: [self-hosted, 'ScadeOne']
     steps:
       - name: "Install Git and clone project"
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: "Set up Python"
         uses: actions/setup-python@v6
