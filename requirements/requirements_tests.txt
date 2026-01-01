@@ -1,5 +1,5 @@
 ansys.scadeone.core
 junitparser==4.0.2
 # something wrong with test discovery with pytest 8.1.0 and above
-pytest==9.0.1
+pytest==9.0.2
 pytest-cov==7.0.0
