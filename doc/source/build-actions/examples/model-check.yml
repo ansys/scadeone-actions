@@ -5,6 +5,6 @@ model-check:
     - name: "Check model"
       uses: ansys/scadeone-actions/model-check@{{ version }}
       with:
-        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        scade-dir: 'C:\Program Files\Ansys Inc\v261\Scade One'
         project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
         job-name: 'ModelCheckQuadFlightC'

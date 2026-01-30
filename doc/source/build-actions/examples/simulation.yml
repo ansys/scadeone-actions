@@ -5,6 +5,6 @@ code-generation:
     - name: "Simulate job"
       uses: ansys/scadeone-actions/simulation@{{ version }}
       with:
-        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        scade-dir: 'C:\Program Files\Ansys Inc\v261\Scade One'
         project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
         job-name: 'SimulationJob'

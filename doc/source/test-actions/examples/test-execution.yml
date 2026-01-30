@@ -5,6 +5,6 @@ test-execution:
     - name: "Execute tests"
       uses: ansys/scadeone-actions/test-execution@{{ version }}
       with:
-        scade-dir: 'C:\Program Files\Ansys Inc\v252\Scade One'
+        scade-dir: 'C:\Program Files\Ansys Inc\v261\Scade One'
         project: 'Model\QuadFlightControl\QuadFlightControl.sproj'
         job-name: 'QuadTest'
