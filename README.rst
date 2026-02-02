@@ -21,8 +21,8 @@ Ansys Scade One Actions
 .. readme_common_begins
 
 Ansys Scade One Actions contains a collection of `GitHub Actions
-<https://docs.github.com/en/actions>`_ that projects in the Ansys
-Scade One ecosystem can use.
+<https://docs.github.com/en/actions>`_ that can be used by projects in the Ansys
+Scade One ecosystem.
 
 .. readme_common_ends
 

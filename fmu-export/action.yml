@@ -32,7 +32,7 @@ inputs:
   scade-dir:
     description: |
       Scade One installation directory, e.g.
-      ``'C:\Program Files\Ansys Inc\v252\Scade One'`` or ``'/opt/AnsysInc/v252/ScadeOne/'``.
+      ``'C:\Program Files\Ansys Inc\v261\Scade One'`` or ``'/opt/AnsysInc/v261/ScadeOne/'``.
     required: true
     type: string
 
@@ -60,7 +60,7 @@ inputs:
 
   target-dir:
     description: |
-      Path to he output directory where the files are generated. If not provided, they will be
+      Path to the output directory where the files are generated. If not provided, they will be
       saved in the ``'output/fmu_gen'`` directory.
     required: false
     default: 'output/fmu_gen'
@@ -75,14 +75,14 @@ inputs:
 
   python-version:
     description: |
-      Python version used for installing and execution of the build process.
+      Python version used for installation and execution of the build process.
     required: false
     default: '3.10'
     type: string
 
   use-python-cache:
     description: |
-      Whether to use the Python cache for installing previously downloaded
+      Whether to use the Python cache to install previously downloaded
       libraries.
     required: false
     default: pip
