@@ -131,7 +131,7 @@ jobs:
         uses: ansys/actions/doc-build@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
         with:
           skip-install: true
-          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+          python-version: '3.13'
           use-python-cache: false
           dependencies: qpdf
 
