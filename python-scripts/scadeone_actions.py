@@ -29,7 +29,6 @@ from pathlib import Path
 from ansys.scadeone.core.job import Job, JobType
 from ansys.scadeone.core.scadeone import Project, ScadeOne
 from ansys.scadeone.core.svc.fmu import FMU_2_Export
-
 from utilities import get_scade_one_home, sone2junit
 
 # -*- coding: utf-8 -*-
