@@ -32,7 +32,7 @@ from ansys.scadeone.core.scadeone import ScadeOne
 
 # add the path containing utilities.py
 script_dir = Path(__file__).parent
-sys.path.append(str(script_dir.parent.parent / "src"))
+sys.path.append(str(script_dir.parent.parent / "python-scripts"))
 import scadeone_actions as scadeone_actions  # noqa: E402
 
 is_windows = platform.system() == "Windows"

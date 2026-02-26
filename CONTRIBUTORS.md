@@ -9,3 +9,4 @@
 * [Jorge Martínez](https://github.com/jorgepiloto)
 * [Kathy Pippert](https://github.com/PipKat)
 * [François Couadau](https://github.com/ansfcouadau)
+* [Muhammed Adedigba](https://github.com/moe-ad)

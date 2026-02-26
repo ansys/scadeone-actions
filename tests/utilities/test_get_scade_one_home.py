@@ -27,7 +27,7 @@ import pytest
 
 # add the path containing utilities.py
 script_dir = Path(__file__).parent
-sys.path.append(str(script_dir.parent.parent / "src"))
+sys.path.append(str(script_dir.parent.parent / "python-scripts"))
 
 
 @pytest.mark.parametrize(
