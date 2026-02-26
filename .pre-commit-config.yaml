@@ -2,24 +2,24 @@ exclude: '\.(swan|swant)$'
 repos:
 
 - repo: https://github.com/psf/black
-  rev: 25.9.0
+  rev: 6305bf1ae645ab7541be4f5028a86239316178eb  # frozen: 26.1.0
   hooks:
   - id: black
 
 - repo: https://github.com/pycqa/isort
-  rev: 6.1.0
+  rev: 3459bdee0962449aad91235273c3fd1306dfebe5  # frozen: 8.0.0
   hooks:
   - id: isort
     args:
       - --line-length=88
 
 - repo: https://github.com/PyCQA/flake8
-  rev: 7.3.0
+  rev: d93590f5be797aabb60e3b09f2f52dddb02f349f  # frozen: 7.3.0
   hooks:
   - id: flake8
 
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v6.0.0
+  rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c  # frozen: v6.0.0
   hooks:
   - id: check-merge-conflict
   - id: check-yaml
@@ -28,7 +28,7 @@ repos:
   - id: debug-statements
 
 - repo: https://github.com/ansys/pre-commit-hooks
-  rev: v0.5.2
+  rev: fd1d6b0b4baeb08e32d4de0909999576695c0433  # frozen: v0.5.2
   hooks:
     - id: add-license-headers
       files: '(tests)/.*\.(py)|./.*\.(yml)'
@@ -38,6 +38,6 @@ repos:
 
 # Validate our github workflow files
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.34.0
+  rev: ec368acd16deee9c560c105ab6d27db4ee19a5ec  # frozen: 0.36.2
   hooks:
     - id: check-github-workflows
