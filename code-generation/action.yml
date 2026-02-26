@@ -95,8 +95,10 @@ runs:
 
   steps:
     - name: "Install Git and clone project"
-      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       if: ${{ inputs.checkout == 'true' }}
+      with:
+        persist-credentials: false
 
     - name: "Set up Python"
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
@@ -106,12 +108,19 @@ runs:
 
     - name: "Install dependencies"
       shell: bash
+      env:
+        SCADE_DIR: ${{ inputs.scade-dir }}
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements/requirements.txt -U --find-links "${{ inputs.scade-dir }}/resources/packages/pyscadeone"
+        pip install -r requirements/requirements.txt -U --find-links "${SCADE_DIR}/resources/packages/pyscadeone"
 
     - name: "Run Scade One Actions"
       shell: python
+      env:
+        SCADE_DIR: ${{ inputs.scade-dir }}
+        PROJECT: ${{ inputs.project }}
+        JOB_NAME: ${{ inputs.job-name }}
+        TARGET_DIR: ${{ inputs.target-dir }}
       run: |
         import os
         import sys
@@ -124,7 +133,7 @@ runs:
         sys.path.insert(1, python_scripts_path)
         from scadeone_actions import scadeone_actions
         # Run the Scade One action with the provided inputs.
-        scadeone_actions(['code_generation', '-s', '${{ inputs.scade-dir }}', '-p', '${{ inputs.project }}', '-j', '${{ inputs.job-name }}', '-o', '${{ inputs.target-dir }}'])
+        scadeone_actions(['code_generation', '-s', os.environ['SCADE_DIR'], '-p', os.environ['PROJECT'], '-j', os.environ['JOB_NAME'], '-o', os.environ['TARGET_DIR']])
 
     - name: "Upload generated code report"
       uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
