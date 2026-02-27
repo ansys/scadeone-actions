@@ -15,7 +15,7 @@ env:
   MAIN_PYTHON_VERSION: '3.11'
   DOCUMENTATION_CNAME: 'actions.scadeone.docs.pyansys.com'
   test-library-name: 'ansys-scadeone-actions'
-  SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One'
+  SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One/'
   SCADE_ONE_DIR_LINUX: '/opt/AnsysInc/v261/ScadeOne/'
   PROJECT: 'tests/resources/QuadFlightControl/QuadFlightControl.sproj'
   JOB_MODEL_CHECK: "ModelCheckQuadFlightC"
