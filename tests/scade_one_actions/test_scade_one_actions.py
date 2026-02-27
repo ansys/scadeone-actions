@@ -20,7 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import os
 import platform
+import re
 import sys
 from argparse import ArgumentParser  # noqa: F401
 from pathlib import Path
@@ -37,15 +39,11 @@ import scadeone_actions as scadeone_actions  # noqa: E402
 
 is_windows = platform.system() == "Windows"
 scade_home_dir = (
-    "C:/Program Files/ANSYS Inc/v261/Scade One"
+    os.environ["SCADE_ONE_DIR_WINDOWS"]
     if is_windows
-    else "/opt/AnsysInc/v261/ScadeOne/"
+    else os.environ["SCADE_ONE_DIR_LINUX"]
 )
-wrong_scade_home_dir = (
-    "C:/Program Files/ANSYS Inc/v261x/Scade One"
-    if is_windows
-    else "/opt/AnsysInc/v261x/ScadeOne/"
-)
+wrong_scade_home_dir = re.sub(r"(v\d+)", r"\1x", scade_home_dir)
 
 sproj = Path(__file__).parent.parent / "resources" / "Project" / "Project.sproj"
 
