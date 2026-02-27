@@ -1,8 +1,24 @@
+ci:
+  - any:
+      - changed-files:
+          - any-glob-to-any-file: ['.github/workflows/**']
+
 maintenance:
-- any-glob-to-any-file: ['.github/**/*', '.pre-commit-config.yaml', 'VERSION']
+  - any:
+      - changed-files:
+        - any-glob-to-any-file: ['.github/**/*', '.pre-commit-config.yaml', 'VERSION']
+
 testing:
-- any-glob-to-any-file: ['tests/**/*']
+  - any:
+      - changed-files:
+        - any-glob-to-any-file: ['tests/**/*']
+
 documentation:
-- any-glob-to-any-file: ['doc/**/*']
+  - any:
+      - changed-files:
+        - any-glob-to-any-file: ['doc/**/*', 'README.rst']
+
 dependencies:
-- any-glob-to-any-file: ['requirements/**/*']
+  - any:
+      - changed-files:
+        - any-glob-to-any-file: ['requirements/**/*']
