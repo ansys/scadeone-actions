@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 env:
-  MAIN_PYTHON_VERSION: '3.11'
+  MAIN_PYTHON_VERSION: '3.13'
   DOCUMENTATION_CNAME: 'actions.scadeone.docs.pyansys.com'
   test-library-name: 'ansys-scadeone-actions'
   SCADE_ONE_DIR_WINDOWS: 'C:/Program Files/ANSYS Inc/v261/Scade One/'
@@ -145,7 +145,7 @@ jobs:
         uses: ansys/actions/doc-build@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
         with:
           skip-install: true
-          python-version: '3.13'
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
           use-python-cache: false
           dependencies: qpdf
 
