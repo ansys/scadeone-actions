@@ -29,7 +29,6 @@ from pathlib import Path
 from ansys.scadeone.core.job import Job, JobType
 from ansys.scadeone.core.scadeone import Project, ScadeOne
 from ansys.scadeone.core.svc.fmu import FMU_2_Export
-
 from utilities import get_scade_one_home, sone2junit
 
 # -*- coding: utf-8 -*-
@@ -46,10 +45,6 @@ prerequisites:
 - The Scade One Python API (pyscadeone) must be installed and available in the Python environment
 """
 
-__author__ = "Ansys, Inc."
-__version__ = "0.1.0"
-__license__ = "MIT"
-__status__ = "Development"
 __all__ = ["ScadeOneActions"]
 
 
@@ -306,7 +301,7 @@ def scadeone_actions(args=None):
     #    This prevents a FileNotFoundError in __init__ when the user actually passed a valid -s
     pre = ArgumentParser(add_help=False)
     pre.add_argument("-s", "--scade_one_home", type=str, default=None)
-    pre_args, remaining = pre.parse_known_args(args)
+    pre_args, _ = pre.parse_known_args(args)
 
     # Build the instance with the (possibly provided) install path.
     s_one_actions = ScadeOneActions(scade_one_home=pre_args.scade_one_home)
