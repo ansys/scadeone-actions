@@ -2,11 +2,10 @@
 
 ## Project Lead
 
-* [Frédéric Bessière](https://github.com/ansjhenry)
+* [Frédéric Bessière](https://github.com/ansfbessier)
 
 ## Individual Contributors
-
-* [Jorge Martínez](https://github.com/jorgepiloto)
-* [Kathy Pippert](https://github.com/PipKat)
+* [Ludovic Oddos](https://github.com/ansloddos)
+* [Magali Value](https://github.com/ansmvalue)
 * [François Couadau](https://github.com/ansfcouadau)
 * [Muhammed Adedigba](https://github.com/moe-ad)
