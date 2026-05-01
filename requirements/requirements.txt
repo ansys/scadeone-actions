@@ -1,2 +1,2 @@
 ansys-scadeone-core
-junitparser==4.0.2
+junitparser==5.0.0
