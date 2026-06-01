@@ -31,7 +31,7 @@ jobs:
     name: "Check GitHub Actions security"
     runs-on: ubuntu-latest
     steps:
-      - uses: ansys/actions/check-actions-security@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+      - uses: ansys/actions/check-actions-security@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
 
   labeler:
     name: "Label syncer"
@@ -103,7 +103,7 @@ jobs:
       pull-requests: read # Required for reading pull request info
     steps:
       - name: "Check pr title"
-        uses: ansys/actions/check-pr-title@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+        uses: ansys/actions/check-pr-title@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -113,7 +113,7 @@ jobs:
     needs: pr-style
     steps:
       - name: "Run code style checks"
-        uses: ansys/actions/code-style@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+        uses: ansys/actions/code-style@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           use-python-cache: false
@@ -132,7 +132,7 @@ jobs:
     needs: pr-style
     steps:
       - name: "Run documentation style checks"
-        uses: ansys/actions/doc-style@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+        uses: ansys/actions/doc-style@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -142,7 +142,7 @@ jobs:
     needs: doc-style
     steps:
       - name: "Build documentation"
-        uses: ansys/actions/doc-build@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+        uses: ansys/actions/doc-build@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
         with:
           skip-install: true
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
@@ -319,7 +319,7 @@ jobs:
     permissions:
       contents: write # Required for deploying documentation
     steps:
-      - uses: ansys/actions/doc-deploy-dev@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+      - uses: ansys/actions/doc-deploy-dev@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
         with:
             cname: ${{ env.DOCUMENTATION_CNAME }}
             token: ${{ secrets.GITHUB_TOKEN }}
@@ -379,7 +379,7 @@ jobs:
     permissions:
       contents: write # Required for deploying documentation
     steps:
-      - uses: ansys/actions/doc-deploy-stable@571fb2b8c7d6ad8c8b18e50bd20fb00f125dcfb6 # v10.2.6
+      - uses: ansys/actions/doc-deploy-stable@d946b24b9a765f4169bcc94afdb27bd1a0533741 # v10.3.2
         with:
           cname: ${{ env.DOCUMENTATION_CNAME }}
           token: ${{ secrets.GITHUB_TOKEN }}
