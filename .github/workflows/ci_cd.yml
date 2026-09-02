@@ -148,7 +148,6 @@ jobs:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
           use-python-cache: false
           dependencies: qpdf
-          sphinxopts: "-j auto -W --keep-going -v"
 
   test-fail:
    name: "Test Execution with errors"
