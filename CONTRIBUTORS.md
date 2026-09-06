@@ -2,10 +2,10 @@
 
 ## Project Lead
 
-* [Frédéric Bessière](https://github.com/ansfbessier)
+* [Ludovic Oddos (Ansys)](https://github.com/ansloddos)
 
 ## Individual Contributors
-* [Ludovic Oddos](https://github.com/ansloddos)
-* [Magali Value](https://github.com/ansmvalue)
-* [François Couadau](https://github.com/ansfcouadau)
+
+* [ansmvalue](https://github.com/ansmvalue)
+* [François Couadau (Ansys)](https://github.com/ansfcouadau)
 * [Muhammed Adedigba](https://github.com/moe-ad)
