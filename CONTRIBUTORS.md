@@ -9,3 +9,4 @@
 * [ansmvalue](https://github.com/ansmvalue)
 * [François Couadau (Ansys)](https://github.com/ansfcouadau)
 * [Muhammed Adedigba](https://github.com/moe-ad)
+* [Roberto Pastor Muela](https://github.com/RobPasMue)
